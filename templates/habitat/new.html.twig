@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un habitat{% endblock %}
+
+{% block body %}
+    <h1>Ajouter un habitat</h1>
+
+    {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.name) }}
+            {{ form_widget(form.name, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.name) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, { 'attr': { 'class': 'form-control' } }) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <button class="btn btn-success">Ajouter</button>
+    {{ form_end(form) }}
+
+    <a href="{{ path('habitat_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+{% endblock %}

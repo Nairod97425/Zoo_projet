@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Autowire all classes in src/
+    App\:
+        resource: '../src/*'
+        tags: ['controller.service_arguments']
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/{Entity,Kernel.php}'
+            - '../src/Kernel.php'
+
+    # Optionnellement, si vous voulez plus de contrôle sur les repositories,
+    # vous pouvez ajouter une section spécifique pour les repositories :
+    App\Repository\:
+        resource: '../src/Repository'

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil - Zoo Arcadia{% endblock %}
+
+{% block body %}
+    <header class="mb-4">
+        <h1>Bienvenue sur le site du Zoo Arcadia</h1>
+        <p>Arcadia est un zoo renommé, situé en France près de la légendaire forêt de Brocéliande, en Bretagne, et ouvert depuis 1960. Ce parc zoologique se distingue par son engagement envers le bien-être animal et la préservation de la faune.</p>
+    </header>
+
+    <section class="mb-4">
+        <h2>Des habitats diversifiés</h2>
+        <p>Le Zoo Arcadia abrite une multitude d'animaux venant de différents continents, soigneusement répartis dans des habitats adaptés à leurs besoins naturels, tels que :</p>
+        <ul>
+            <li><strong>La Savane :</strong> où règnent les majestueux lions, éléphants et girafes.</li>
+            <li><strong>La Jungle :</strong> abritant des primates, félins et reptiles fascinants.</li>
+            <li><strong>Les Marais :</strong> où vous pourrez observer des oiseaux et reptiles étonnants.</li>
+        </ul>
+    </section>
+
+    <section class="mb-4">
+        <h2>Santé et bien-être animal au cœur de nos priorités</h2>
+        <p>Chaque jour, une équipe dédiée de vétérinaires veille à la santé de chaque animal. Avant l'ouverture du parc, des contrôles sont effectués pour s'assurer que tout se passe bien. De plus, la nourriture des animaux est méticuleusement calculée et ajustée selon les recommandations des vétérinaires, garantissant un apport nutritionnel optimal.</p>
+    </section>
+
+    <section class="mb-4">
+        <h2>Une aventure dirigée par un homme passionné</h2>
+        <p>Sous la direction de José, le directeur passionné, le zoo connaît une croissance continue et se porte très bien financièrement. José, fier de son équipe et de ses animaux heureux, aspire à aller encore plus loin. Il souhaite développer une application web moderne qui permettrait aux visiteurs de découvrir les animaux du parc, de consulter leur état de santé, et de se renseigner sur les services et horaires du zoo.</p>
+    </section>
+
+    <section class="mb-4">
+        <h2>Vers une expérience digitale pour les visiteurs</h2>
+        <p>Pour répondre à cette ambition, DevSoft, l’entreprise que vous avez récemment rejointe, a été choisie pour concevoir cette application. Grâce à votre expertise, Arcadia pourra renforcer sa notoriété et offrir à ses visiteurs une expérience numérique enrichissante.</p>
+        <a href="{{ path('habitat_index') }}" class="btn btn-primary">Voir nos habitats et nos animaux</a>
+    </section>
+{% endblock %}

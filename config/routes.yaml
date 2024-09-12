@@ -1,0 +1,27 @@
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
+# config/routes.yaml
+homepage:
+    path: /
+    controller: App\Controller\HomeController::index
+
+habitats:
+    path: /habitats
+    controller: App\Controller\HabitatController::index
+
+
+habitat_list:
+    path: /habitats
+    controller: App\Controller\HabitatController::index
+
+contact:
+    path: /contact
+    controller: App\Controller\ContactController::index
+
+about:
+    path: /about
+    controller: App\Controller\AboutController::index
+

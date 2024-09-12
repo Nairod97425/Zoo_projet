@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Avis pour {{ habitat.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Avis pour {{ habitat.nom }}</h1>
+
+    {% if avis|length > 0 %}
+        <h2>Avis Approuvés :</h2>
+        <ul>
+            {% for a in avis %}
+                <li>
+                    <strong>{{ a.pseudo }} :</strong> {{ a.avis }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucun avis approuvé pour cet habitat.</p>
+    {% endif %}
+
+    <h2>Soumettre un Avis</h2>
+    {{ form_start(form) }}
+        {{ form_row(form.pseudo) }}
+        {{ form_row(form.avis) }}
+        {{ form_row(form.submit) }}
+    {{ form_end(form) }}
+{% endblock %}

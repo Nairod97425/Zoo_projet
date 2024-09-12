@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des habitats{% endblock %}
+
+{% block body %}
+    <h1>Liste des habitats</h1>
+    <a href="{{ path('habitat_new') }}" class="btn btn-primary mb-3">Ajouter un habitat</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habitat in habitats %}
+                <tr>
+                    <td>{{ habitat.id }}</td>
+                    <td>{{ habitat.name }}</td>
+                    <td>{{ habitat.description }}</td>
+                    <td>
+                        <a href="{{ path('habitat_edit', {'id': habitat.id}) }}" class="btn btn-warning">Modifier</a>
+                        <form method="post" action="{{ path('habitat_delete', {'id': habitat.id}) }}" style="display:inline-block;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ habitat.id) }}">
+                            <button class="btn btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
