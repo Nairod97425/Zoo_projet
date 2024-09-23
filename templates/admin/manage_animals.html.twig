@@ -1,0 +1,38 @@
+{# templates/admin/manage_animals.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les Animaux{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Gérer les Animaux</h1>
+    <a href="{{ path('admin_create_animal') }}" class="btn btn-primary mb-3">Créer un nouvel animal</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Espèce</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for animal in animaux %}
+                <tr>
+                    <td>{{ animal.id }}</td>
+                    <td>{{ animal.nom }}</td>
+                    <td>{{ animal.espece }}</td>
+                    <td>
+                        <a href="{{ path('admin_edit_animal', { id: animal.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{{ path('admin_delete_animal', { id: animal.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun animal trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

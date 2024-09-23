@@ -5,7 +5,7 @@ services:
 
     # Autowire all classes in src/
     App\:
-        resource: '../src/*'
+        resource: '../src'
         tags: ['controller.service_arguments']
         exclude:
             - '../src/DependencyInjection/'
@@ -16,3 +16,8 @@ services:
     # vous pouvez ajouter une section spécifique pour les repositories :
     App\Repository\:
         resource: '../src/Repository'
+
+    App\Repository\ConsultationRepository:
+        autowire: true
+        autoconfigure: true
+        public: true

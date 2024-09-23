@@ -1,35 +1,37 @@
+{# templates/admin/list_users.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
-<h1>Liste des utilisateurs</h1>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Rôles</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-        <tr>
-            <td>{{ user.id }}</td>
-            <td>{{ user.email }}</td>
-            <td>{{ user.roles | join(', ') }}</td>
-            <td>
-                <a href="{{ path('admin_edit_user', {id: user.id}) }}" class="btn btn-warning">Modifier</a>
-                <a href="{{ path('admin_delete_user', {id: user.id}) }}" class="btn btn-danger" 
-                   onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">Supprimer</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<a href="{{ path('admin_create_user') }}" class="btn btn-primary">Créer un nouvel utilisateur</a>
-
+<div class="container">
+    <h1>Liste des utilisateurs</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Rôles</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id_admin }}</td>
+                    <td>{{ user.Email }}</td>
+                    <td>{{ user.Roles|join(', ') }}</td>
+                    <td>
+                        <a href="{{ path('admin_edit_user', { id_admin: user.id_admin }) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{{ path('admin_delete_user', { id_admin: user.id_admin }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun utilisateur trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

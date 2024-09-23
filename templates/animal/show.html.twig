@@ -1,0 +1,16 @@
+{# templates/animal/show.html.twig #}
+
+<h1>{{ animal.prenom }} ({{ animal.race }})</h1>
+
+<p>Etat: {{ animal.etat }}</p>
+
+<h2>Images</h2>
+{% if images|length > 0 %}
+    <div class="animal-images">
+        {% for image in images %}
+            <img src="{{ image.url }}" alt="{{ animal.prenom }}" />
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No images available for this animal.</p>
+{% endif %}

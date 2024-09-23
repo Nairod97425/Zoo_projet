@@ -1,0 +1,21 @@
+{# templates/animal/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des animaux{% endblock %}
+
+{% block body %}
+    <h1>Liste des animaux</h1>
+    <a href="{{ path('animal_new') }}" class="btn btn-primary">Ajouter un nouvel animal</a>
+    <ul>
+        {% for animal in animals %}
+            <li>
+                {{ animal.Prenom }} - <a href="{{ path('animal_edit', {'id': animal.id}) }}">Éditer</a>
+                <form action="{{ path('animal_delete', {'id': animal.id}) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ animal.id) }}">
+                    <button class="btn btn-danger" type="submit">Supprimer</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

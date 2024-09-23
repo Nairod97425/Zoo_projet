@@ -1,0 +1,38 @@
+{# templates/admin/manage_services.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les Services{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Gérer les Services</h1>
+    <a href="{{ path('admin_create_service') }}" class="btn btn-primary mb-3">Créer un nouveau service</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+                <tr>
+                    <td>{{ service.id }}</td>
+                    <td>{{ service.nom }}</td>
+                    <td>{{ service.description }}</td>
+                    <td>
+                        <a href="{{ path('admin_edit_service', { id: service.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{{ path('admin_delete_service', { id: service.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucun service trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

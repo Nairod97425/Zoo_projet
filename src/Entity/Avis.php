@@ -13,56 +13,57 @@ class Avis
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    private ?int $id_Avis = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $pseudo;
+    private string $Pseudo;
 
     #[ORM\Column(type: 'text')]
-    private string $avis;
+    private string $Avis;
 
     #[ORM\Column(type: 'boolean')]
-    private bool $isApproved;
+    private bool $Statut;
 
-    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'avis')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Habitat::class)]
+    #[ORM\JoinColumn(name: 'id_habitat', referencedColumnName: 'id')]
     private ?Habitat $habitat = null;
+
 
     public function getId(): ?int
     {
-        return $this->id;
+        return $this->id_Avis;
     }
 
     public function getPseudo(): string
     {
-        return $this->pseudo;
+        return $this->Pseudo;
     }
 
     public function setPseudo(string $pseudo): self
     {
-        $this->pseudo = $pseudo;
+        $this->Pseudo = $pseudo;
         return $this;
     }
 
     public function getAvis(): string
     {
-        return $this->avis;
+        return $this->Avis;
     }
 
     public function setAvis(string $avis): self
     {
-        $this->avis = $avis;
+        $this->Avis = $avis;
         return $this;
     }
 
     public function isApproved(): bool
     {
-        return $this->isApproved;
+        return $this->Statut;
     }
 
     public function setIsApproved(bool $isApproved): self
     {
-        $this->isApproved = $isApproved;
+        $this->Statut = $isApproved;
         return $this;
     }
 

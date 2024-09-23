@@ -1,0 +1,36 @@
+{# templates/admin/manage_habitats.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Gérer les Habitats{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Gérer les Habitats</h1>
+    <a href="{{ path('admin_create_habitat') }}" class="btn btn-primary mb-3">Créer un nouvel habitat</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nom</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for habitat in habitats %}
+                <tr>
+                    <td>{{ habitat.id }}</td>
+                    <td>{{ habitat.nom }}</td>
+                    <td>
+                        <a href="{{ path('admin_edit_habitat', { id: habitat.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        <a href="{{ path('admin_delete_habitat', { id: habitat.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Aucun habitat trouvé</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

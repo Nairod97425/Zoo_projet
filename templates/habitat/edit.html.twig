@@ -1,3 +1,5 @@
+{# templates/habitat/edit.html.twig #}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier l'habitat{% endblock %}
@@ -5,21 +7,17 @@
 {% block body %}
     <h1>Modifier l'habitat</h1>
 
-    {{ form_start(form) }}
-        <div class="form-group">
-            {{ form_label(form.name) }}
-            {{ form_widget(form.name, { 'attr': { 'class': 'form-control' } }) }}
-            {{ form_errors(form.name) }}
+    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+        {{ form_widget(form) }}
+
+        {# Champ pour télécharger une nouvelle image #}
+        <div>
+            <label for="image_field_name">Télécharger une nouvelle image</label>
+            <input type="file" name="image_field_name" id="image_field_name" />
         </div>
 
-        <div class="form-group">
-            {{ form_label(form.description) }}
-            {{ form_widget(form.description, { 'attr': { 'class': 'form-control' } }) }}
-            {{ form_errors(form.description) }}
-        </div>
-
-        <button class="btn btn-success">Modifier</button>
+        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
     {{ form_end(form) }}
 
-    <a href="{{ path('habitat_index') }}" class="btn btn-secondary mt-3">Retour à la liste</a>
+    <a href="{{ path('habitat_index') }}">Retour à la liste des habitats</a>
 {% endblock %}

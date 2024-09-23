@@ -1,21 +1,30 @@
-controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
-# config/routes.yaml
-homepage:
+home:
     path: /
     controller: App\Controller\HomeController::index
 
-habitats:
+habitat_index:
     path: /habitats
     controller: App\Controller\HabitatController::index
+    methods: GET
 
+habitat_new:
+    path: /habitats/new
+    controller: App\Controller\HabitatController::new
+    methods: GET|POST
 
-habitat_list:
-    path: /habitats
-    controller: App\Controller\HabitatController::index
+habitat_edit:
+    path: /habitats/edit/{id}
+    controller: App\Controller\HabitatController::edit
+    methods: GET|POST
+    requirements:
+        id: \d+
+
+habitat_delete:
+    path: /habitats/delete/{id}
+    controller: App\Controller\HabitatController::delete
+    methods: POST
+    requirements:
+        id: \d+
 
 contact:
     path: /contact
@@ -25,3 +34,70 @@ about:
     path: /about
     controller: App\Controller\AboutController::index
 
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+    controller: App\Controller\SecurityController::logout
+
+admin_create_user:
+    path: /admin/user/new
+    controller: App\Controller\AdminController::createUser
+
+admin_edit_user:
+    path: /admin/user/edit/{id}
+    controller: App\Controller\AdminController::editUser
+    requirements:
+        id: \d+
+
+admin_delete_user:
+    path: /admin/user/delete/{id}
+    controller: App\Controller\AdminController::deleteUser
+    requirements:
+        id: \d+
+
+admin_users:
+    path: /admin/users
+    controller: App\Controller\AdminController::listUsers
+
+admin_comptes_rendus:
+    path: /admin/comptes-rendus
+    controller: App\Controller\AdminController::viewCompteRendus
+
+admin_habitats:
+    path: /admin/habitats
+    controller: App\Controller\AdminController::manageHabitats
+
+admin_animals:
+    path: /admin/animaux
+    controller: App\Controller\AdminController::manageAnimals
+
+admin_services:
+    path: /admin/services
+    controller: App\Controller\AdminController::manageServices
+
+animal_index:
+    path: /animaux
+    controller: App\Controller\AnimalController::index
+    methods: GET
+
+animal_new:
+    path: /animaux/new
+    controller: App\Controller\AnimalController::new
+    methods: GET|POST
+
+animal_edit:
+    path: /animaux/edit/{id}
+    controller: App\Controller\AnimalController::edit
+    methods: GET|POST
+    requirements:
+        id: \d+
+
+animal_delete:
+    path: /animaux/delete/{id}
+    controller: App\Controller\AnimalController::delete
+    methods: POST
+    requirements:
+        id: \d+

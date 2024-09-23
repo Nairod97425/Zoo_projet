@@ -1,0 +1,29 @@
+{# templates/admin/consultations.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Consultations{% endblock %}
+
+{% block body %}
+    <h1>Consultations</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Animal</th>
+                <th>Date</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for consultation in consultations %}
+                <tr>
+                    <td>{{ consultation.id }}</td>
+                    <td>{{ consultation.animal }}</td>
+                    <td>{{ consultation.date|date('d/m/Y') }}</td>
+                    <td>{{ consultation.notes }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

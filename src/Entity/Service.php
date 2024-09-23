@@ -6,34 +6,29 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Entity\Employee;
 
 /**
  * @ORM\Entity
  */
+#[ORM\Entity]
 class Service
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null; // ou $id_Service selon votre configuration
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     */
-    private $name;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private string $Nom;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Employee::class, mappedBy="service")
-     */
-    private $employees;
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $Description;
+
+    #[ORM\OneToMany(targetEntity: Employee::class, mappedBy: 'service')]
+    private Collection $employees;
 
     public function __construct()
     {
@@ -47,27 +42,25 @@ class Service
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->Nom;
     }
 
-    public function setName(string $name): self
+    public function setNom(string $Nom): self
     {
-        $this->name = $name;
-
+        $this->Nom = $Nom;
         return $this;
     }
 
     public function getDescription(): ?string
     {
-        return $this->description;
+        return $this->Description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(?string $Description): self
     {
-        $this->description = $description;
-
+        $this->Description = $Description;
         return $this;
     }
 

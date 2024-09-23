@@ -1,0 +1,31 @@
+{# templates/habitat/liste.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des habitats
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des habitats</h1>
+
+	<ul>
+		{% for habitat in habitats %}
+			<li>
+				<strong>{{ habitat.Name }}</strong>
+
+				{% for image in habitat.getImages() %}
+					<img src="{{ asset('uploads/images/' ~ image) }}" alt="Image de l'habitat">
+				{% endfor %}
+
+				<p>{{ habitat.Description }}</p>
+
+				<a href="{{ path('habitat_edit', {id: habitat.getId()}) }}">Modifier</a>
+				<form action="{{ path('habitat_delete', {id: habitat.getId()}) }}" method="POST" style="display:inline;">
+					<button type="submit" class="btn btn-danger">Supprimer</button>
+				</form>
+			</li>
+		{% endfor %}
+	</ul>
+
+	<a href="{{ path('habitat_new') }}" class="btn btn-primary">Créer un nouvel habitat</a>
+{% endblock %}

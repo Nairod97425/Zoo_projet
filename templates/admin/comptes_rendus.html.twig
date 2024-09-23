@@ -1,0 +1,29 @@
+{# templates/admin/comptes_rendus.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Comptes Rendus{% endblock %}
+
+{% block body %}
+    <h1>Comptes Rendus</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Animal</th>
+                <th>Date</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for compteRendu in comptes_rendus %}
+                <tr>
+                    <td>{{ compteRendu.id }}</td>
+                    <td>{{ compteRendu.animal }}</td>
+                    <td>{{ compteRendu.date|date('d/m/Y') }}</td>
+                    <td>{{ compteRendu.description }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

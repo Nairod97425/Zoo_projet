@@ -1,53 +1,58 @@
 <?php
+// src/Entity/CompteRendu.php
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CompteRenduRepository")
  */
+#[ORM\Entity(repositoryClass: 'App\Repository\CompteRenduRepository')]
 class CompteRendu
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    private int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Assert\NotBlank
-     */
-    private $animal;
+    #[ORM\Column(type: 'string', length: 255)]
+    private string $description;
 
-    /**
-     * @ORM\Column(type="date")
-     * @Assert\NotBlank
-     */
-    private $date;
+    #[ORM\ManyToOne(targetEntity: 'App\Entity\Animal')]
+    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id_Animal')]
+    private ?Animal $animal;
 
-    /**
-     * @ORM\Column(type="text", nullable=true)
-     */
-    private $description;
+
+    #[ORM\Column(type: 'datetime')]
+    private \DateTimeInterface $date;
+
+    // Getters and Setters
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getAnimal(): ?string
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getAnimal(): ?Animal
     {
         return $this->animal;
     }
 
-    public function setAnimal(string $animal): self
+    public function setAnimal(?Animal $animal): self
     {
         $this->animal = $animal;
-
         return $this;
     }
 
@@ -59,19 +64,6 @@ class CompteRendu
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): self
-    {
-        $this->description = $description;
-
         return $this;
     }
 }

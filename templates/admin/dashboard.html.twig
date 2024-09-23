@@ -1,0 +1,25 @@
+{# templates/admin/dashboard.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Dashboard</h1>
+    <p>Bienvenue dans le tableau de bord de l'administration !</p>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{{ path('admin_create_user') }}" class="btn btn-primary">Créer un nouvel utilisateur</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('admin_users') }}" class="btn btn-secondary">Gérer les utilisateurs</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('admin_habitats') }}" class="btn btn-success">Gérer les habitats</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('admin_animals') }}" class="btn btn-info">Gérer les animaux</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

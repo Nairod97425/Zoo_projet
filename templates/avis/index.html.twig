@@ -1,27 +1,38 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Avis pour {{ habitat.nom }}{% endblock %}
+{% block title %}Liste des Avis{% endblock %}
 
 {% block body %}
-    <h1>Avis pour {{ habitat.nom }}</h1>
+    <h1>Liste des Avis</h1>
 
-    {% if avis|length > 0 %}
-        <h2>Avis Approuvés :</h2>
-        <ul>
-            {% for a in avis %}
-                <li>
-                    <strong>{{ a.pseudo }} :</strong> {{ a.avis }}
-                </li>
+    <table>
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Avis</th>
+                <th>Statut</th>
+                <th>Habitat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for avis in avis %}
+                <tr>
+                    <td>{{ avis.Pseudo }}</td>
+                    <td>{{ avis.Avis }}</td>
+                    <td>{{ avis.Statut ? 'Approuvé' : 'En attente' }}</td>
+                    <td>{{ avis.habitat.Name }}</td>
+                    <td>
+                        <a href="{{ path('avis_edit', {id: avis.id_Avis}) }}">Modifier</a>
+                        <form action="{{ path('avis_delete', {id: avis.id_Avis}) }}" method="post" style="display:inline;">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>Aucun avis approuvé pour cet habitat.</p>
-    {% endif %}
+        </tbody>
+    </table>
 
-    <h2>Soumettre un Avis</h2>
-    {{ form_start(form) }}
-        {{ form_row(form.pseudo) }}
-        {{ form_row(form.avis) }}
-        {{ form_row(form.submit) }}
-    {{ form_end(form) }}
+    <a href="{{ path('avis_new') }}">Ajouter un Avis</a>
 {% endblock %}

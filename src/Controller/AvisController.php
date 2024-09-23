@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Avis;
-use App\Entity\Habitat;
 use App\Form\AvisType;
 use App\Repository\AvisRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,36 +13,59 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class AvisController extends AbstractController
 {
-    #[Route('/habitat/{id}/avis', name: 'habitat_avis')]
-    public function avis(Habitat $habitat, AvisRepository $avisRepository, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/avis', name: 'avis_index')]
+    public function index(AvisRepository $avisRepository): Response
     {
-        // Récupère les avis approuvés pour cet habitat
-        $avisList = $avisRepository->findBy([
-            'habitat' => $habitat,
-            'isApproved' => true
-        ]);
+        $avis = $avisRepository->findAll();
 
-        // Formulaire d'ajout d'avis
-        $newAvis = new Avis();
-        $form = $this->createForm(AvisType::class, $newAvis);
+        return $this->render('avis/index.html.twig', [
+            'avis' => $avis,
+        ]);
+    }
+
+    #[Route('/avis/new', name: 'avis_new')]
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $avis = new Avis();
+        $form = $this->createForm(AvisType::class, $avis);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $newAvis->setHabitat($habitat);
-            $newAvis->setIsApproved(false);  // Avis doit être validé par l'admin
-            $entityManager->persist($newAvis);
+            $entityManager->persist($avis);
             $entityManager->flush();
 
-            // Ajouter un message flash pour informer l'utilisateur
-            $this->addFlash('success', 'Votre avis a été soumis et est en attente d\'approbation.');
-
-            return $this->redirectToRoute('habitat_avis', ['id' => $habitat->getId()]);
+            return $this->redirectToRoute('avis_index');
         }
 
-        return $this->render('avis/index.html.twig', [
-            'habitat' => $habitat,
-            'avis' => $avisList,
+        return $this->render('avis/new.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    #[Route('/avis/edit/{id}', name: 'avis_edit')]
+    public function edit(Avis $avis, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(AvisType::class, $avis);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('avis_index');
+        }
+
+        return $this->render('avis/edit.html.twig', [
+            'form' => $form->createView(),
+            'avis' => $avis,
+        ]);
+    }
+
+    #[Route('/avis/delete/{id}', name: 'avis_delete', methods: ['POST'])]
+    public function delete(Avis $avis, EntityManagerInterface $entityManager): Response
+    {
+        $entityManager->remove($avis);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('avis_index');
     }
 }

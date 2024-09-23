@@ -1,18 +1,14 @@
+{# templates/admin/edit_user.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Modifier l'utilisateur{% endblock %}
 
 {% block body %}
-<h1>Modifier l'utilisateur</h1>
-
-{{ form_start(form) }}
-    {{ form_row(form.email) }}
-    {{ form_row(form.password, {'label': 'Mot de passe (Laissez vide si inchangé)'}) }}
-    {{ form_row(form.roles) }}
-
-    <button class="btn btn-success">Enregistrer</button>
-{{ form_end(form) }}
-
-<a href="{{ path('admin_users') }}" class="btn btn-secondary">Retour à la liste</a>
-
+<div class="container">
+    <h1>Modifier l'utilisateur</h1>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Sauvegarder</button>
+    {{ form_end(form) }}
+</div>
 {% endblock %}

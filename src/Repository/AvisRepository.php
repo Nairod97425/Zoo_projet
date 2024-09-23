@@ -17,31 +17,34 @@ class AvisRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère les avis approuvés pour un habitat
-     * 
+     * Récupère tous les avis associés à un habitat spécifique
+     *
      * @param int $habitatId
-     * @return Avis[] Returns an array of approved Avis objects
+     * @return Avis[]
      */
-    public function findApprovedByHabitat(int $habitatId): array
+    public function findByHabitat(int $habitatId): array
     {
         return $this->createQueryBuilder('a')
             ->where('a.habitat = :habitatId')
-            ->andWhere('a.isApproved = true')
             ->setParameter('habitatId', $habitatId)
             ->getQuery()
             ->getResult();
     }
 
     /**
-     * Récupère les avis non approuvés pour validation
-     * 
-     * @return Avis[] Returns an array of Avis objects awaiting approval
+     * Récupère un avis spécifique avec l'habitat associé
+     *
+     * @param int $id
+     * @return Avis|null
      */
-    public function findPendingApproval(): array
+    public function findOneWithHabitat(int $id): ?Avis
     {
         return $this->createQueryBuilder('a')
-            ->where('a.isApproved = false')
+            ->leftJoin('a.habitat', 'h')
+            ->addSelect('h')
+            ->where('a.id_Avis = :id')
+            ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 }
