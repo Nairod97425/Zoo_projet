@@ -11,9 +11,10 @@ class HomeController extends AbstractController
     #[Route('/', name: 'home')]
     public function index(): Response
     {
+        $user = $this->getUser();
+
         return $this->render('home/index.html.twig', [
-            'zoo_name' => 'Le Zoo Fantastique',
-            'description' => 'Bienvenue au Zoo Fantastique, un endroit où les animaux de tous les continents cohabitent.',
+            'user' => $user,
         ]);
     }
 }

@@ -1,13 +1,13 @@
 doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
-        server_version: '8.0'  # Remplacez par la version appropriée de votre serveur
+        server_version: '8.2'  # Remplacez par la version appropriée de votre serveur
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
 
         # Ajoutez cette section pour enregistrer le type enum
-        types:
-            enum: App\Doctrine\EnumType
+        # types:
+        #     enum: App\Doctrine\EnumType
 
     orm:
         auto_generate_proxy_classes: true

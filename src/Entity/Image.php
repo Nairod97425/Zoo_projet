@@ -17,7 +17,7 @@ class Image
     private string $url;
 
     #[ORM\ManyToOne(targetEntity: Animal::class)]
-    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id_Animal')]
+    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id')]
     private ?Animal $animal = null;
     
 

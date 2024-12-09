@@ -1,90 +1,129 @@
 <?php
+
 namespace App\Entity;
 
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
-#[ORM\Table(name: 'User')]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', unique: true)]
-    private string $Email;
+    #[ORM\Column(length: 180)]
+    private ?string $email = null;
 
-    #[ORM\Column(type: 'string')]
-    private string $motDePasse;
+    #[ORM\Column]
+    private array $roles = [];
 
-    #[ORM\Column(type: 'json')]
-    private array $Roles = [];
+    #[ORM\Column]
+    private ?string $password = null;
 
-    // Getters and Setters
-    public function getId_admin(): ?int
+    /**
+     * Non-persisted plain password.
+     *
+     * @Assert\NotBlank(groups={"registration"}, message="Please enter a password.")
+     * @Assert\Length(
+     *     min=10,
+     *     max=4096,
+     *     minMessage="Your password should be at least {{ limit }} characters.",
+     *     groups={"registration"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/[A-Z]/",
+     *     message="Your password must contain at least one uppercase letter.",
+     *     groups={"registration"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/\d/",
+     *     message="Your password must contain at least one number.",
+     *     groups={"registration"}
+     * )
+     * @Assert\Regex(
+     *     pattern="/[^\w]/",
+     *     message="Your password must contain at least one special character (e.g., !@#$%^&*).",
+     *     groups={"registration"}
+     * )
+     */
+    private ?string $plainPassword = null;
+
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId_admin(?int $id_admin): self
+    public function getEmail(): ?string
     {
-        $this->id = $id_admin;
-        return $this;
+        return $this->email;
     }
 
-    public function getEmail(): string
+    public function setEmail(string $email): static
     {
-        return $this->Email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->Email = $email;
-        return $this;
-    }
-
-    public function getMot_de_passe(): string
-    {
-        return $this->motDePasse;
-    }
-
-    public function setMot_de_passe(string $mot_de_passe): self
-    {
-        $this->motDePasse = $mot_de_passe;
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->motDePasse;
-    }
-
-    public function getRoles(): array
-    {
-        // Ensure roles are always returned as an array
-        $roles = $this->Roles;
-        // Guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->Roles = $roles;
+        $this->email = $email;
         return $this;
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->Email;
+        return (string) $this->email;
+    }
+
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): static
+    {
+        $this->password = $password;
+        return $this;
     }
 
     public function eraseCredentials(): void
     {
-        // Clear any sensitive data from the user object
-        // In this example, there is nothing to clear
+        // Effacer toutes les données sensibles (par exemple, le mot de passe en clair)
+        $this->plainPassword = null;
+    }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->getUserIdentifier();
+    }
+
+    // Getter et setter pour le mot de passe plain
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
+        return $this;
     }
 }

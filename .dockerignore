@@ -1,0 +1,8 @@
+# Ignorer les fichiers sensibles et inutiles
+.git
+node_modules
+# var/cache
+.env
+.idea
+.DS_Store
+# *.log

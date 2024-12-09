@@ -14,27 +14,53 @@ class Habitat
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private int $id;
+    private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private string $Name;
+    private $name;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private ?string $Description = null;
+    private $description;
 
     #[ORM\OneToMany(targetEntity: 'App\Entity\Avis', mappedBy: 'habitat', cascade: ['persist', 'remove'])]
-    private Collection $Avis;
+    private Collection $avis;
 
-    #[ORM\OneToMany(targetEntity: 'App\Entity\Animal', mappedBy: 'habitat', cascade: ['persist', 'remove'])]
-    private Collection $Animals;
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
+    private Collection $animals;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private array $images = [];
 
+    public function getImages(): array
+    {
+        return $this->images;
+    }
+
+    public function setImages(array $images): self
+    {
+        $this->images = $images;
+        return $this;
+    }
+
+    public function addImage(string $image): self
+    {
+        if (!in_array($image, $this->images, true)) {
+            $this->images[] = $image;
+        }
+        return $this;
+    }
+
+    public function removeImage(string $image): self
+    {
+        $this->images = array_filter($this->images, fn($img) => $img !== $image);
+        return $this;
+    }
+
+
     public function __construct()
     {
-        $this->Avis = new ArrayCollection();
-        $this->Animals = new ArrayCollection();
+        $this->avis = new ArrayCollection();
+        $this->animals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,23 +70,23 @@ class Habitat
 
     public function getName(): string
     {
-        return $this->Name;
+        return $this->name;
     }
 
     public function setName(string $name): self
     {
-        $this->Name = $name;
+        $this->name = $name;
         return $this;
     }
 
     public function getDescription(): ?string
     {
-        return $this->Description;
+        return $this->description;
     }
 
     public function setDescription(?string $description): self
     {
-        $this->Description = $description;
+        $this->description = $description;
         return $this;
     }
 
@@ -69,13 +95,13 @@ class Habitat
      */
     public function getAvis(): Collection
     {
-        return $this->Avis;
+        return $this->avis;
     }
 
     public function addAvis(Avis $avis): self
     {
-        if (!$this->Avis->contains($avis)) {
-            $this->Avis->add($avis);
+        if (!$this->avis->contains($avis)) {
+            $this->avis->add($avis);
             $avis->setHabitat($this);
         }
 
@@ -84,7 +110,7 @@ class Habitat
 
     public function removeAvis(Avis $avis): self
     {
-        if ($this->Avis->removeElement($avis)) {
+        if ($this->avis->removeElement($avis)) {
             if ($avis->getHabitat() === $this) {
                 $avis->setHabitat(null);
             }
@@ -98,13 +124,13 @@ class Habitat
      */
     public function getAnimals(): Collection
     {
-        return $this->Animals;
+        return $this->animals;
     }
 
     public function addAnimal(Animal $animal): self
     {
-        if (!$this->Animals->contains($animal)) {
-            $this->Animals->add($animal);
+        if (!$this->animals->contains($animal)) {
+            $this->animals->add($animal);
             $animal->setHabitat($this);
         }
 
@@ -113,38 +139,11 @@ class Habitat
 
     public function removeAnimal(Animal $animal): self
     {
-        if ($this->Animals->removeElement($animal)) {
+        if ($this->animals->removeElement($animal)) {
             if ($animal->getHabitat() === $this) {
                 $animal->setHabitat(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getImages(): ?array
-    {
-        return $this->images;
-    }
-
-    public function setImages(?array $images): self
-    {
-        $this->images = $images ?? [];
-        return $this;
-    }
-
-    public function addImage(string $image): self
-    {
-        if (!in_array($image, $this->images, true)) {
-            $this->images[] = $image;
-        }
-
-        return $this;
-    }
-
-    public function removeImage(string $image): self
-    {
-        $this->images = array_values(array_filter($this->images, fn($img) => $img !== $image));
 
         return $this;
     }

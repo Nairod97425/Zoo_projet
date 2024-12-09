@@ -2,7 +2,7 @@
 $servername = "mysqldb";
 $username = "user";
 $password = "password";
-$dbname = "appdb";
+$dbname = "arcadia";
 
 // Créer une connexion
 $conn = new mysqli($servername, $username, $password, $dbname);

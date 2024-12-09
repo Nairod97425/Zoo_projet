@@ -1,0 +1,24 @@
+{# templates/admin_animal/edit.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Animal
+{% endblock %}
+
+{% block body %}
+	<h1>Edit Animal</h1>
+
+	{{ form_start(form) }}
+	{{ form_row(form.name) }}
+	{{ form_row(form.species) }}
+	{{ form_row(form.birthDate) }}
+	{{ form_row(form.healthStatus) }}
+	{{ form_row(form.feedingSchedule) }}
+	{{ form_row(form.habitat) }}
+	{{ form_row(form.description) }}
+	{{ form_row(form.image) }}
+
+
+	<button class="btn btn-primary">Update Animal</button>
+	{{ form_end(form) }}
+{% endblock %}

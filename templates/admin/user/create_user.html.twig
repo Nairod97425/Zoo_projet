@@ -7,7 +7,9 @@
 <div class="container">
     <h1>Créer un nouvel utilisateur</h1>
     {{ form_start(form) }}
-        {{ form_widget(form) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.password) }}
+        {{ form_row(form.roles) }}
         <button type="submit" class="btn btn-primary">Créer</button>
     {{ form_end(form) }}
 </div>

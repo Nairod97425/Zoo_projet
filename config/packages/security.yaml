@@ -1,13 +1,51 @@
+# security:
+#     password_hashers:
+#         App\Entity\User:
+#             algorithm: auto
+
+#     providers:
+#         app_user_provider:
+#             entity:
+#                 class: App\Entity\User
+#                 property: Email
+
+#     firewalls:
+#         dev:
+#             pattern: ^/(_(profiler|wdt)|css|images|js)/
+#             security: false
+
+#         main:
+#             lazy: true
+#             pattern: ^/
+#             provider: app_user_provider
+#             custom_authenticators:
+#                 - App\Security\AuthAuthenticator
+#             form_login:
+#                 login_path: app_login
+#                 check_path: app_login
+#                 username_parameter: Email
+#                 password_parameter: Mot_de_passe
+#             logout:
+#                 path: app_logout
+#                 target: app_login
+
+#     access_control:
+#         - { path: ^/admin, roles: ROLE_ADMIN }
+#         - { path: ^/employe, roles: ROLE_EMPLOYER }
+#         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
+#         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#         - { path: ^/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+
 security:
     password_hashers:
-        App\Entity\User:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
             algorithm: auto
 
     providers:
         app_user_provider:
             entity:
                 class: App\Entity\User
-                property: Email
+                property: email
 
     firewalls:
         dev:
@@ -16,22 +54,49 @@ security:
 
         main:
             lazy: true
-            pattern: ^/
             provider: app_user_provider
             custom_authenticators:
                 - App\Security\AuthAuthenticator
             form_login:
                 login_path: app_login
                 check_path: app_login
-                username_parameter: Email
-                password_parameter: Mot_de_passe
+                default_target_path: /
             logout:
                 path: app_logout
-                target: app_login
+                target: /
+            remember_me:
+                secret: '%kernel.secret%'
+                lifetime: 604800
+                path: /
+                secure: auto # Active HTTPS si disponible
+
+
+    role_hierarchy:
+        ROLE_ADMIN: [ROLE_EMPLOYE]
+        ROLE_VETERINAIRE: [ROLE_EMPLOYE]
+        ROLE_EMPLOYE: [ROLE_USER]
 
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/employe, roles: ROLE_EMPLOYER }
-        - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
+        - { path: ^/register$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/logout$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/admin_animal/(create|edit|delete), roles: ROLE_EMPLOYE }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
+        - { path: ^/avis, roles: ROLE_USER }
+        - { path: ^/employe, roles: ROLE_EMPLOYE }
+
+        
+    # # Contrôles d'accès
+    # access_control:
+    #     - { path: ^/admin, roles: ROLE_ADMIN }
+    #     - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
+    #     - { path: ^/avis, roles: ROLE_USER }
+    #     - { path: ^/employe, roles: ROLE_EMPLOYE }
+    #     # Ajoutez une règle pour les routes accessibles uniquement aux employés
+    #     - { path: ^/admin_animal, roles: ROLE_EMPLOYE }
+    #     - { path: ^/admin_animal/create, roles: ROLE_EMPLOYE }
+    #     - { path: ^/admin_animal/edit, roles: ROLE_EMPLOYE }
+    #     - { path: ^/admin_animal/delete, roles: ROLE_EMPLOYE }
+    #     - { path: ^/avis, roles: ROLE_USER }
+    #     - { path: ^/register$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+    #     - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

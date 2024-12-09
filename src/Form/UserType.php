@@ -20,7 +20,7 @@ class UserType extends AbstractType
                 'label' => 'Email',
                 'attr' => ['placeholder' => 'Email']
             ])
-            ->add('motDePasse', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
                 'attr' => ['placeholder' => 'Mot de passe']
             ])

@@ -1,23 +1,27 @@
 services:
+    Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
     _defaults:
-        autowire: true
-        autoconfigure: true
+        autowire: true      # Injecte automatiquement les dépendances dans vos services.
+        autoconfigure: true # Enregistre automatiquement vos services en tant que commandes, abonnés aux événements, etc.
 
-    # Autowire all classes in src/
+    # Rend les classes dans src/ disponibles pour être utilisées en tant que services
+    # Cela crée un service par classe dont l'identifiant est le nom de classe entièrement qualifié
     App\:
-        resource: '../src'
-        tags: ['controller.service_arguments']
+        resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/{Entity,Kernel.php}'
+            - '../src/{Entity,Migrations,Tests}'
             - '../src/Kernel.php'
 
-    # Optionnellement, si vous voulez plus de contrôle sur les repositories,
-    # vous pouvez ajouter une section spécifique pour les repositories :
-    App\Repository\:
-        resource: '../src/Repository'
+    App\Security\AuthAuthenticator:
+    arguments:
+        $urlGenerator: '@router'
+        $requestStack: '@request_stack'
+        $csrfTokenManager: '@security.csrf.token_manager'
+    tags:
+        - { name: 'security.authenticator' }
 
-    App\Repository\ConsultationRepository:
-        autowire: true
-        autoconfigure: true
-        public: true
+
+    # Définir un alias pour UserPasswordHasherInterface
+    Symfony\Component\Security\Core\PasswordHasher\UserPasswordHasherInterface:
+        alias: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface

@@ -24,18 +24,21 @@
 		{% endblock %}
 	</head>
 	<body>
+
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
 			<a class="navbar-brand" href="{{ path('home') }}">Zoo</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav">
+				<ul
+					class="navbar-nav">
+					<!-- Liens accessibles par tous -->
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('home') }}">Home</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="{{ path('habitat_new') }}">Créer Habitats</a>
+						<a class="nav-link" href="{{ path('habitat_index') }}">Voir les habitats</a>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('contact') }}">Contact</a>
@@ -43,29 +46,81 @@
 					<li class="nav-item">
 						<a class="nav-link" href="{{ path('about') }}">About</a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('habitat_index') }}">Voir les habitats</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('animal_new') }}">Ajouter un animal</a>
-						<!-- Nouveau lien pour ajouter un animal -->
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('admin_create_user') }}" {# class="btn btn-primary" #}>Créer un nouvel utilisateur</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('app_login') }}" {# class="btn btn-secondary" #}>Connexion</a>
-					</li>
+
+					{% if app.user %}
+						<!-- Liens pour utilisateurs connectés -->
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('avis_index') }}">Vos avis</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('avis_new') }}">Ajouter un avis</a>
+						</li>
+					{% endif %}
+
+					{% if is_granted('ROLE_EMPLOYE') %}
+						<!-- Liens pour employés -->
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_employe_dashboard') }}">Employé Dashboard</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('habitat_new') }}">Créer un habitat</a>
+						</li>
+					{% endif %}
+
+					{% if is_granted('ROLE_VETERINAIRE') %}
+						<!-- Liens pour vétérinaires -->
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_veterinaire_dashboard') }}">Tableau de bord vétérinaire</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('consultation_index') }}">Consultations</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('consultation_new') }}">Nouvelle consultation</a>
+						</li>
+					{% endif %}
+
+					{% if is_granted('ROLE_ADMIN') %}
+						<!-- Liens pour administrateurs -->
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_admin_dashboard') }}">Admin Dashboard</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('admin_create_user') }}">Créer un utilisateur</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('animal_new') }}">Ajouter un animal</a>
+						</li>
+					{% endif %}
+
+					{% if app.user %}
+						<!-- Déconnexion -->
+						<li class="nav-item">
+							<form action="{{ path('logout') }}" method="post" class="nav-link">
+								<button type="submit" class="btn btn-danger">Déconnexion</button>
+							</form>
+						</li>
+					{% else %}
+						<!-- Connexion -->
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+						</li>
+					{% endif %}
 				</ul>
-				{% if is_granted('ROLE_ADMIN') %}
-					<p>Bienvenue, Administrateur !</p>
-				{% elseif is_granted('ROLE_EMPLOYER') %}
-					<p>Bienvenue, Employé !</p>
-				{% elseif is_granted('ROLE_VETERINAIRE') %}
-					<p>Bienvenue, Vétérinaire !</p>
-				{% endif %}
 			</div>
 		</nav>
+
+
+		{% if is_granted('ROLE_ADMIN') %}
+			<p>Bienvenue, Administrateur !</p>
+		{% elseif is_granted('ROLE_EMPLOYE') %}
+			<p>Bienvenue, Employé !</p>
+		{% elseif is_granted('ROLE_VETERINAIRE') %}
+			<p>Bienvenue, Vétérinaire !</p>
+		{% endif %}
 
 		<div class="container mt-4"> {% block body %}{% endblock %}
 			</div>

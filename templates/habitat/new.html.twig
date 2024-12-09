@@ -1,23 +1,18 @@
-{# templates/habitat/new.html.twig #}
-
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer un nouvel habitat{% endblock %}
+{% block title %}Ajouter un Habitat{% endblock %}
 
 {% block body %}
-    <h1>Créer un nouvel habitat</h1>
+    <h1>Ajouter un Habitat</h1>
 
-    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        {{ form_widget(form) }}
-
-        {# Champ pour télécharger une image #}
-        {# <div>
-            <label for="image_field_name">Télécharger une image</label>
-            <input type="file" name="image_field_name" id="image_field_name" />
-        </div> #}
-
-        <button type="submit" class="btn btn-primary">Créer</button>
+    {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.images) }}
+        {{ form_row(form.animals) }}
+        <button class="btn btn-primary" type="submit">Enregistrer</button>
     {{ form_end(form) }}
 
+    <br>
     <a href="{{ path('habitat_index') }}">Retour à la liste des habitats</a>
 {% endblock %}

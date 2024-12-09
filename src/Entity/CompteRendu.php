@@ -20,7 +20,7 @@ class CompteRendu
     private string $description;
 
     #[ORM\ManyToOne(targetEntity: 'App\Entity\Animal')]
-    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id_Animal')]
+    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id')]
     private ?Animal $animal;
 
 

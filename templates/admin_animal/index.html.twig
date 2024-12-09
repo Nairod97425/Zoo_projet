@@ -1,0 +1,52 @@
+{# templates/admin_animal/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Animals List
+{% endblock %}
+
+{% block body %}
+	<h1>Animals List</h1>
+
+	<a href="{{ path('animal_new') }}" class="btn btn-primary mb-3">Add New Animal</a>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Species</th>
+				<th>Birth Date</th>
+				<th>Health Status</th>
+				<th>Feeding Schedule</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for animal in animals %}
+				<tr>
+					<td>{{ animal.name }}</td>
+					<td>{{ animal.species }}</td>
+					<td>{{ animal.birthDate|date('d/m/Y') }}</td>
+					<td>{{ animal.healthStatus }}</td>
+					<td>{{ animal.feedingSchedule }}</td>
+					<td>
+						{{ animal.habitat ? animal.habitat.name : 'Aucun habitat' }}
+					</td>
+					<td>
+						<a href="{{ path('animal_edit', {'id': animal.id}) }}" class="btn btn-warning">Edit</a>
+
+						{# Formulaire pour supprimer un animal #}
+						<form action="{{ path('animal_delete', {'id': animal.id}) }}" method="post" style="display:inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ animal.id) }}">
+							<button class="btn btn-danger">Delete</button>
+						</form>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="6">No animals found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+{% endblock %}

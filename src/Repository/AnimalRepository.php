@@ -1,5 +1,5 @@
 <?php
-
+// src/Repository/AnimalRepository.php
 namespace App\Repository;
 
 use App\Entity\Animal;
@@ -7,7 +7,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Animal>
+ * @method Animal|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Animal|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Animal[]    findAll()
+ * @method Animal[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class AnimalRepository extends ServiceEntityRepository
 {
@@ -16,18 +19,6 @@ class AnimalRepository extends ServiceEntityRepository
         parent::__construct($registry, Animal::class);
     }
 
-    /**
-     * Trouver tous les animaux d'un habitat spécifique
-     * 
-     * @param int $habitatId
-     * @return Animal[]
-     */
-    public function findByHabitat(int $habitatId): array
-    {
-        return $this->createQueryBuilder('a')
-            ->where('a.habitat = :habitatId')
-            ->setParameter('habitatId', $habitatId)
-            ->getQuery()
-            ->getResult();
-    }
+    // Ajoutez des méthodes personnalisées si nécessaire
 }
+

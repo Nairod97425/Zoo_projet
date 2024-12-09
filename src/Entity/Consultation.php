@@ -22,7 +22,7 @@ class Consultation
     private ?Habitat $habitat = null;
 
     #[ORM\ManyToOne(targetEntity: 'App\Entity\Animal')]
-    #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id_Animal')]
+    #[ORM\JoinColumn(name: 'id_animal', referencedColumnName: 'id')]
     private ?Animal $animal;
 
 

@@ -1,0 +1,42 @@
+{# templates/admin/list_users.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des utilisateurs
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Liste des utilisateurs</h1>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Email</th>
+					<th>Rôles</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+					<tr>
+						<td>{{ user.id }}</td>
+						{# Correction ici #}
+						<td>{{ user.email }}</td>
+						{# Correction : la propriété commence par une minuscule #}
+						<td>{{ user.roles|join(', ') }}</td>
+						<td>
+							<a href="{{ path('admin_edit_user', { id: user.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+							{# Correction : user.id #}
+							<a href="{{ path('admin_delete_user', { id: user.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+							{# Correction : user.id #}
+						</td>
+					</tr>
+				{% else %}
+					<tr>
+						<td colspan="4">Aucun utilisateur trouvé</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	</div>
+{% endblock %}

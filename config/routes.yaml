@@ -1,30 +1,67 @@
+# controllers:
+#     resource:
+#         path: ../src/Controller/
+#         namespace: App\Controller
+#     type: attribute
+
 home:
     path: /
     controller: App\Controller\HomeController::index
 
-habitat_index:
-    path: /habitats
-    controller: App\Controller\HabitatController::index
-    methods: GET
+app_register:
+    path: /register
+    controller: App\Controller\RegistrationController::register
+
+app_login:
+    path: /login
+    controller: App\Controller\SecurityController::login
+
+app_logout:
+    path: /logout
+
+app_employe_login:
+    path: /employe/login
+    controller: App\Controller\EmployeSecurityController::login
+
+app_admin_dashboard:
+    path: /admin/dashboard
+    controller: App\Controller\AdminController::dashboard
+
+app_veterinaire_dashboard:
+    path: /veterinaire/dashboard
+    controller: App\Controller\VeterinaireController::dashboard
+
+app_employe_dashboard:
+    path: /employe/dashboard
+    controller: App\Controller\EmployeController::dashboard
 
 habitat_new:
-    path: /habitats/new
+    path: /habitat/new
     controller: App\Controller\HabitatController::new
-    methods: GET|POST
+    methods: [GET, POST]
 
-habitat_edit:
-    path: /habitats/edit/{id}
-    controller: App\Controller\HabitatController::edit
-    methods: GET|POST
-    requirements:
-        id: \d+
+habitat_index:
+    path: /habitat
+    controller: App\Controller\HabitatController::index
 
-habitat_delete:
-    path: /habitats/delete/{id}
-    controller: App\Controller\HabitatController::delete
-    methods: POST
-    requirements:
-        id: \d+
+animal_index:
+    path: /admin_animal
+    controller: App\Controller\AdminAnimalController::index
+
+animal_new:
+    path: /admin_animal/create
+    controller: App\Controller\AdminAnimalController::create
+    methods: [GET, POST]
+
+animal_edit:
+    path: /admin_animal/edit/{id}
+    controller: App\Controller\AdminAnimalController::edit
+    methods: [GET, POST]
+
+animal_delete:
+    path: /admin_animal/delete/{id}
+    controller: App\Controller\AdminAnimalController::delete
+    methods: [POST]
 
 contact:
     path: /contact
@@ -34,70 +71,60 @@ about:
     path: /about
     controller: App\Controller\AboutController::index
 
-app_login:
-    path: /login
-    controller: App\Controller\SecurityController::login
-
-app_logout:
-    path: /logout
-    controller: App\Controller\SecurityController::logout
+admin_list_user:
+    path: /admin/user/list_users
+    controller: App\Controller\AdminController::listUsers
 
 admin_create_user:
-    path: /admin/user/new
+    path: /admin/user/create
     controller: App\Controller\AdminController::createUser
 
 admin_edit_user:
     path: /admin/user/edit/{id}
     controller: App\Controller\AdminController::editUser
-    requirements:
-        id: \d+
 
 admin_delete_user:
     path: /admin/user/delete/{id}
     controller: App\Controller\AdminController::deleteUser
+
+animal_crud:
+    path: /admin_animal/{action}/{id}
+    controller: App\Controller\AdminAnimalController::{action}
+    methods: [GET, POST]
     requirements:
-        id: \d+
+        action: create|edit|delete
 
-admin_users:
-    path: /admin/users
-    controller: App\Controller\AdminController::listUsers
 
-admin_comptes_rendus:
-    path: /admin/comptes-rendus
-    controller: App\Controller\AdminController::viewCompteRendus
+avis_index:
+    path: /avis
+    controller: App\Controller\AvisController::index
 
-admin_habitats:
-    path: /admin/habitats
-    controller: App\Controller\AdminController::manageHabitats
+avis_new:
+    path: /avis/new
+    controller: App\Controller\AvisController::new
 
-admin_animals:
-    path: /admin/animaux
-    controller: App\Controller\AdminController::manageAnimals
+avis_edit:
+    path: /avis/edit/{id}
+    controller: App\Controller\AvisController::edit
 
-admin_services:
-    path: /admin/services
-    controller: App\Controller\AdminController::manageServices
+avis_delete:
+    path: /avis/delete/{id}
+    controller: App\Controller\AvisController::delete
+    methods: [POST]
 
-animal_index:
-    path: /animaux
-    controller: App\Controller\AnimalController::index
-    methods: GET
+consultation_index:
+    path: /consultations
+    controller: App\Controller\ConsultationController::index
 
-animal_new:
-    path: /animaux/new
-    controller: App\Controller\AnimalController::new
-    methods: GET|POST
+consultation_new:
+    path: /consultations/new
+    controller: App\Controller\ConsultationController::new
 
-animal_edit:
-    path: /animaux/edit/{id}
-    controller: App\Controller\AnimalController::edit
-    methods: GET|POST
-    requirements:
-        id: \d+
+consultation_edit:
+    path: /consultations/edit/{id}
+    controller: App\Controller\ConsultationController::edit
 
-animal_delete:
-    path: /animaux/delete/{id}
-    controller: App\Controller\AnimalController::delete
-    methods: POST
-    requirements:
-        id: \d+
+consultation_delete:
+    path: /consultations/delete/{id}
+    controller: App\Controller\ConsultationController::delete
+    methods: [POST]

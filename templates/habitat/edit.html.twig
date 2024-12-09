@@ -8,7 +8,12 @@
     <h1>Modifier l'habitat</h1>
 
     {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        {{ form_widget(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.images, {'attr': {'multiple': 'multiple'}}) }}
+        {{ form_row(form.animals) }}
+        {# <button class="btn btn-primary" type="submit">Enregistrer</button> #}
+   
 
         {# Champ pour télécharger une nouvelle image #}
         <div>

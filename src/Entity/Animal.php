@@ -1,81 +1,54 @@
 <?php
 // src/Entity/Animal.php
-
 namespace App\Entity;
 
-use App\Repository\AnimalRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity(repositoryClass: AnimalRepository::class)]
+#[ORM\Entity(repositoryClass: 'App\Repository\AnimalRepository')]
+#[ORM\Table(name: 'animal')]
 class Animal
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: 'integer')]
-    private int $id_Animal;
+    #[ORM\Column(name: 'id_animal', type: 'integer')]
+    private $id;
 
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $Prenom;
-
-    #[ORM\Column(type: 'string', length: 50)]
-    private string $Race;
-
-    #[ORM\Column(type: 'string', length: 50, nullable: true)]
-    private ?string $Etat = null;
-
-    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'Animals')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'animals')]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Habitat $habitat = null;
 
-    // Here's the change: A one-to-many relationship with the Image entity
-    #[ORM\OneToMany(mappedBy: 'animal', targetEntity: Image::class, cascade: ['persist', 'remove'])]
-    private Collection $images;
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private $name;
 
-    public function __construct()
-    {
-        $this->images = new ArrayCollection();
-    }
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private $species;
 
-    // Getters and setters...
+    #[ORM\Column(type: 'date')]
+    #[Assert\NotBlank]
+    private $birthDate;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private $healthStatus;
+
+    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank]
+    private $feedingSchedule;
+
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private ?string $image = null;
+
+    // Getters et setters
 
     public function getId(): ?int
     {
-        return $this->id_Animal;
-    }
-
-    public function getPrenom(): string
-    {
-        return $this->Prenom;
-    }
-
-    public function setPrenom(string $prenom): self
-    {
-        $this->Prenom = $prenom;
-        return $this;
-    }
-
-    public function getRace(): string
-    {
-        return $this->Race;
-    }
-
-    public function setRace(string $race): self
-    {
-        $this->Race = $race;
-        return $this;
-    }
-
-    public function getEtat(): ?string
-    {
-        return $this->Etat;
-    }
-
-    public function setEtat(?string $etat): self
-    {
-        $this->Etat = $etat;
-        return $this;
+        return $this->id;
     }
 
     public function getHabitat(): ?Habitat
@@ -86,35 +59,90 @@ class Animal
     public function setHabitat(?Habitat $habitat): self
     {
         $this->habitat = $habitat;
-        return $this;
-    }
-
-    // Getter for images
-    public function getImages(): Collection
-    {
-        return $this->images;
-    }
-
-    // Add an image to the animal
-    public function addImage(Image $image): self
-    {
-        if (!$this->images->contains($image)) {
-            $this->images[] = $image;
-            $image->setAnimal($this);
-        }
 
         return $this;
     }
 
-    // Remove an image from the animal
-    public function removeImage(Image $image): self
+    public function getName(): ?string
     {
-        if ($this->images->removeElement($image)) {
-            // set the owning side to null (unless already changed)
-            if ($image->getAnimal() === $this) {
-                $image->setAnimal(null);
-            }
-        }
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getSpecies(): ?string
+    {
+        return $this->species;
+    }
+
+    public function setSpecies(string $species): self
+    {
+        $this->species = $species;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeInterface
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeInterface $birthDate): self
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getHealthStatus(): ?string
+    {
+        return $this->healthStatus;
+    }
+
+    public function setHealthStatus(string $healthStatus): self
+    {
+        $this->healthStatus = $healthStatus;
+
+        return $this;
+    }
+
+    public function getFeedingSchedule(): ?string
+    {
+        return $this->feedingSchedule;
+    }
+
+    public function setFeedingSchedule(string $feedingSchedule): self
+    {
+        $this->feedingSchedule = $feedingSchedule;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails de l'Habitat{% endblock %}
+
+{% block body %}
+    <h1>Habitat: {{ habitat.name }}</h1>
+    <p>{{ habitat.description }}</p>
+
+    <h2>Animaux présents dans cet habitat :</h2>
+    {% if animals is empty %}
+        <p>Aucun animal n'a été ajouté à cet habitat.</p>
+    {% else %}
+        <ul>
+        {% for animal in animals %}
+            <li>
+                <strong>{{ animal.name }}</strong> ({{ animal.species }})
+                
+                {# Affichage de l'image de l'animal si elle existe #}
+                {% if animal.image %}
+                    <img src="{{ asset('uploads/images/' ~ animal.image) }}" alt="{{ animal.name }}" style="max-width: 150px; height: auto;">
+                {% else %}
+                    <p>Aucune image disponible</p>
+                {% endif %}
+
+                {# Affichage de la description de l'animal si elle existe #}
+                {% if animal.description %}
+                    <p>{{ animal.description }}</p>
+                {% else %}
+                    <p>Aucune description disponible</p>
+                {% endif %}
+
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+                    <button>Editer</button>  {# Vous pouvez ajouter des boutons d'édition ou de suppression si l'utilisateur est connecté #}
+                {% else %}
+                    {# <p>Information visible uniquement en tant qu'utilisateur invité.</p> #}
+                {% endif %}
+            </li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
