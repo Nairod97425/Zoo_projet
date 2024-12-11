@@ -13,34 +13,36 @@
 				<tr>
 					<th>ID</th>
 					<th>Nom</th>
+					<th>Description</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
-				{% for image in habitat.images %}
-					<img src="{{ asset('uploads/' ~ image) }}" alt="Image de l'habitat">
-				{% endfor %}
-
 				{% for habitat in habitats %}
 					<tr>
 						<td>{{ habitat.id }}</td>
 						<td>{{ habitat.nom }}</td>
-                        <td>{{ habitat.description }}</td>
+						<td>{{ habitat.description }}</td>
 						<td>
+							{% for image in habitat.images %}
+								<img src="{{ asset('uploads/' ~ image) }}" alt="Image de l'habitat" style="width: 50px; height: auto;">
+							{% endfor %}
 							<a href="{{ path('admin_edit_habitat', { id: habitat.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
-							<form method="post" action="{{ path('admin_delete_habitat', { id: habitat.id }) }}">
+							<form method="post" action="{{ path('admin_delete_habitat', { id: habitat.id }) }}" style="display:inline;">
 								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ habitat.id) }}">
-								<button class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</button>
+								<button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</button>
 							</form>
-
 						</td>
 					</tr>
 				{% else %}
 					<tr>
-						<td colspan="3">Aucun habitat trouvé</td>
+						<td colspan="4">Aucun habitat trouvé</td>
 					</tr>
 				{% endfor %}
-			</tbody>
-		</table>
-	</div>
-{% endblock %}
+				<tr>
+					<td colspan="4">Aucun habitat trouvé</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+</div>{% endblock %}

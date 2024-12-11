@@ -1,27 +1,32 @@
 services:
+    Symfony\Component\Security\Csrf\CsrfTokenManager:
+        tags: ['csrf.token_manager']
+        
     Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
-    _defaults:
-        autowire: true      # Injecte automatiquement les dépendances dans vos services.
-        autoconfigure: true # Enregistre automatiquement vos services en tant que commandes, abonnés aux événements, etc.
 
-    # Rend les classes dans src/ disponibles pour être utilisées en tant que services
-    # Cela crée un service par classe dont l'identifiant est le nom de classe entièrement qualifié
+    _defaults:
+        autowire: true      # Automatically inject dependencies into your services
+        autoconfigure: true # Automatically register your services as commands, event subscribers, etc.
+
+    # Render classes in src/ available as services
+    # This creates a service for each class in src/ with the class name as the service id
     App\:
         resource: '../src/'
+        tags: ['controller.service_arguments']
         exclude:
             - '../src/DependencyInjection/'
             - '../src/{Entity,Migrations,Tests}'
             - '../src/Kernel.php'
 
+    # Register your custom authenticator as a service
     App\Security\AuthAuthenticator:
-    arguments:
-        $urlGenerator: '@router'
-        $requestStack: '@request_stack'
-        $csrfTokenManager: '@security.csrf.token_manager'
-    tags:
-        - { name: 'security.authenticator' }
+        arguments:
+            $urlGenerator: '@router'
+            $requestStack: '@request_stack'
+            $csrfTokenManager: '@security.csrf.token_manager'  # Optional: Ensure this is needed
+        tags:
+            - { name: 'security.authenticator' }
 
-
-    # Définir un alias pour UserPasswordHasherInterface
+    # Define an alias for UserPasswordHasherInterface
     Symfony\Component\Security\Core\PasswordHasher\UserPasswordHasherInterface:
         alias: Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface

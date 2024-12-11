@@ -24,7 +24,10 @@
                     <td>{{ service.description }}</td>
                     <td>
                         <a href="{{ path('admin_edit_service', { id: service.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
-                        <a href="{{ path('admin_delete_service', { id: service.id }) }}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr ?');">Supprimer</a>
+                        <form method="post" action="{{ path('admin_delete_service', { id: service.id }) }}" style="display:inline;" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce service ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ service.id) }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                        </form>
                     </td>
                 </tr>
             {% else %}

@@ -16,21 +16,26 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\HttpFoundation\RequestStack;
+use App\Entity\User;
+use Doctrine\ORM\EntityManagerInterface;
 
 class AuthAuthenticator extends AbstractAuthenticator
 {
     private $urlGenerator;
     private $csrfTokenManager;
     private $requestStack;
+    private $entityManager;
 
     public function __construct(
         UrlGeneratorInterface $urlGenerator,
         CsrfTokenManagerInterface $csrfTokenManager,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        EntityManagerInterface $entityManager
     ) {
         $this->urlGenerator = $urlGenerator;
         $this->csrfTokenManager = $csrfTokenManager;
         $this->requestStack = $requestStack;
+        $this->entityManager = $entityManager;
     }
 
     public function supports(Request $request): ?bool
@@ -40,22 +45,27 @@ class AuthAuthenticator extends AbstractAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->request->get('email');
-        $password = $request->request->get('password');
+        $email = $request->request->get('_email');
+        $plainPassword = $request->request->get('_password');
 
-        if (empty($email)) {
-            throw new \InvalidArgumentException('L\'email est obligatoire.');
+        if (!$email || !$plainPassword) {
+            throw new AuthenticationException('Email ou mot de passe manquant.');
         }
 
-        // Validation du token CSRF
         $csrfToken = $request->request->get('_csrf_token');
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('authenticate', $csrfToken))) {
             throw new AuthenticationException('Invalid CSRF token.');
         }
 
+        // Recherche de l'utilisateur
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
+        if (!$user || !password_verify($plainPassword, $user->getPassword())) {
+            throw new AuthenticationException('Identifiants incorrects.');
+        }
+
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($password),
+            new PasswordCredentials($plainPassword),
             [new CsrfTokenBadge('authenticate', $csrfToken)]
         );
     }
@@ -63,7 +73,6 @@ class AuthAuthenticator extends AbstractAuthenticator
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         $user = $token->getUser();
-
         $roleRedirects = [
             'ROLE_ADMIN' => 'app_admin_dashboard',
             'ROLE_EMPLOYE' => 'app_employe_dashboard',
@@ -81,18 +90,14 @@ class AuthAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // Accéder à la session via RequestStack
         $session = $this->requestStack->getSession();
 
         if ($session) {
-            // Utiliser addFlash pour ajouter un message d'erreur
-            $session->getFlashBag()->add('error', 'E-mail ou mot de passe incorrect.');
+            $session->set('message', 'E-mail ou mot de passe incorrect.');
         }
 
-        // Redirection vers la page de connexion
         return new RedirectResponse($this->urlGenerator->generate('app_login'));
     }
-
 
     public function start(Request $request, AuthenticationException $authException = null): Response
     {

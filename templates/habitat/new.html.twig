@@ -3,16 +3,18 @@
 {% block title %}Ajouter un Habitat{% endblock %}
 
 {% block body %}
-    <h1>Ajouter un Habitat</h1>
+    <div class="container">
+        <h1>Ajouter un Habitat</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.images) }}
-        {{ form_row(form.animals) }}
-        <button class="btn btn-primary" type="submit">Enregistrer</button>
-    {{ form_end(form) }}
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.images, {'attr': {'multiple': 'multiple'}}) }}
+            {{ form_row(form.animals) }}
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+        {{ form_end(form) }}
 
-    <br>
-    <a href="{{ path('habitat_index') }}">Retour à la liste des habitats</a>
+        <br>
+        <a href="{{ path('habitat_index') }}" class="btn btn-secondary">Retour à la Liste des Habitats</a>
+    </div>
 {% endblock %}

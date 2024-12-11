@@ -1,9 +1,56 @@
 {# templates/employe/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Employe Dashboard{% endblock %}
+{% block title %}Tableau de Bord Employé{% endblock %}
 
 {% block body %}
-    <h1>Welcome to the Employe Dashboard</h1>
-    <!-- Contenu spécifique pour le tableau de bord de l'employé -->
+    <div class="container">
+        <h1>Bienvenue dans le Tableau de Bord Employé</h1>
+        <p>Voici un aperçu de vos activités et informations.</p>
+        
+        {# Contenu spécifique pour le tableau de bord de l'employé #}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Informations Personnelles
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Nom :</strong> {{ app.user.name }}</p>
+                        <p><strong>Email :</strong> {{ app.user.email }}</p>
+                        {# Ajoutez d'autres informations si nécessaire #}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Tâches Récentes
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {# Remplacez par des tâches dynamiques #}
+                            <li>Tâche 1</li>
+                            <li>Tâche 2</li>
+                            <li>Tâche 3</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        Notifications
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            {# Remplacez par des notifications dynamiques #}
+                            <li>Notification 1</li>
+                            <li>Notification 2</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

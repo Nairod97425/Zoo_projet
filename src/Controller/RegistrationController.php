@@ -1,5 +1,5 @@
 <?php
-
+// src/Controller/RegistrationController.php
 namespace App\Controller;
 
 use App\Entity\User;
@@ -13,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class RegistrationController extends AbstractController
 {
-    #[Route(path: '/register', name: 'app_register')]
+    #[Route(path: '/register', name: 'app_register', methods: ['GET', 'POST'])]
     public function register(Request $request, UserPasswordHasherInterface $passwordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
@@ -21,7 +21,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Hacher le mot de passe plain
+            // Hacher le mot de passe
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
@@ -33,7 +33,10 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Rediriger l'utilisateur vers la page de connexion
+            // Message de succès
+            $this->addFlash('success', 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
+
+            // Rediriger vers la page de connexion
             return $this->redirectToRoute('app_login');
         }
 

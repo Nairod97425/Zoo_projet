@@ -1,5 +1,5 @@
 <?php
-
+// src/Form/RegistrationFormType.php
 namespace App\Form;
 
 use App\Entity\User;
@@ -20,9 +20,7 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('email', EmailType::class, [
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter an email',
-                    ]),
+                    new NotBlank(['message' => 'Please enter an email']),
                 ],
             ])
             ->add('plainPassword', RepeatedType::class, [
@@ -30,12 +28,10 @@ class RegistrationFormType extends AbstractType
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'Password'],
+                'first_options' => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
                 'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
+                    new NotBlank(['message' => 'Please enter a password']),
                     new Length([
                         'min' => 10,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',

@@ -1,136 +1,136 @@
 <!DOCTYPE html>
 <html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>
-			{% block title %}Welcome!
-			{% endblock %}
-		</title>
-		<link
-		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-		<!-- Google font Lora -->
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-		<link
-		href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
-		<!-- Bootstrap CSS -->
-		<link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> {% block stylesheets %}{% endblock %}
-		{% block javascripts %}
-			<!-- Bootstrap JS and dependencies -->
-			<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-			<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
-			<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-		{% endblock %}
-	</head>
-	<body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}Bienvenue au Zoo Arcadia{% endblock %}
+    </title>
+    <link
+        rel="icon" 
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <!-- Google font Lora -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}
+        <!-- Bootstrap JS and dependencies -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {% endblock %}
+</head>
+<body>
 
-		<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-			<a class="navbar-brand" href="{{ path('home') }}">Zoo</a>
-			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul
-					class="navbar-nav">
-					<!-- Liens accessibles par tous -->
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('home') }}">Home</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('habitat_index') }}">Voir les habitats</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('contact') }}">Contact</a>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="{{ path('about') }}">About</a>
-					</li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="{{ path('home') }}">Zoo Arcadia</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <!-- Liens accessibles par tous -->
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('home') }}">Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('habitat_index') }}">Voir les habitats</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('contact') }}">Contact</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('about') }}">À propos</a>
+            </li>
 
-					{% if app.user %}
-						<!-- Liens pour utilisateurs connectés -->
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('avis_index') }}">Vos avis</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('avis_new') }}">Ajouter un avis</a>
-						</li>
-					{% endif %}
+            {% if app.user %}
+                <!-- Liens pour utilisateurs connectés -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('avis_index') }}">Vos avis</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('avis_new') }}">Ajouter un avis</a>
+                </li>
+            {% endif %}
 
-					{% if is_granted('ROLE_EMPLOYE') %}
-						<!-- Liens pour employés -->
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_employe_dashboard') }}">Employé Dashboard</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('habitat_new') }}">Créer un habitat</a>
-						</li>
-					{% endif %}
+            {% if is_granted('ROLE_EMPLOYE') %}
+                <!-- Liens pour employés -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_employe_dashboard') }}">Tableau de bord Employé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('habitat_new') }}">Créer un habitat</a>
+                </li>
+            {% endif %}
 
-					{% if is_granted('ROLE_VETERINAIRE') %}
-						<!-- Liens pour vétérinaires -->
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_veterinaire_dashboard') }}">Tableau de bord vétérinaire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('consultation_index') }}">Consultations</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('consultation_new') }}">Nouvelle consultation</a>
-						</li>
-					{% endif %}
+            {% if is_granted('ROLE_VETERINAIRE') %}
+                <!-- Liens pour vétérinaires -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_veterinaire_dashboard') }}">Tableau de bord Vétérinaire</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('consultation_index') }}">Consultations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('consultation_new') }}">Nouvelle consultation</a>
+                </li>
+            {% endif %}
 
-					{% if is_granted('ROLE_ADMIN') %}
-						<!-- Liens pour administrateurs -->
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_admin_dashboard') }}">Admin Dashboard</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('admin_create_user') }}">Créer un utilisateur</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('animal_new') }}">Ajouter un animal</a>
-						</li>
-					{% endif %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <!-- Liens pour administrateurs -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_admin_dashboard') }}">Tableau de bord Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('admin_create_user') }}">Créer un utilisateur</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('animal_new') }}">Ajouter un animal</a>
+                </li>
+            {% endif %}
 
-					{% if app.user %}
-						<!-- Déconnexion -->
-						<li class="nav-item">
-							<form action="{{ path('logout') }}" method="post" class="nav-link">
-								<button type="submit" class="btn btn-danger">Déconnexion</button>
-							</form>
-						</li>
-					{% else %}
-						<!-- Connexion -->
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
-						</li>
-					{% endif %}
-				</ul>
-			</div>
-		</nav>
+            {% if app.user %}
+                <!-- Déconnexion -->
+                <li class="nav-item">
+                    <form action="{{ path('app_logout') }}" method="post" class="nav-link">
+                        <button type="submit" class="btn btn-danger">Déconnexion</button>
+                    </form>
+                </li>
+            {% else %}
+                <!-- Connexion -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_register') }}">S'inscrire</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
 
+{% if is_granted('ROLE_ADMIN') %}
+    <p class="mt-2">Bienvenue, Administrateur !</p>
+{% elseif is_granted('ROLE_EMPLOYE') %}
+    <p class="mt-2">Bienvenue, Employé !</p>
+{% elseif is_granted('ROLE_VETERINAIRE') %}
+    <p class="mt-2">Bienvenue, Vétérinaire !</p>
+{% endif %}
 
-		{% if is_granted('ROLE_ADMIN') %}
-			<p>Bienvenue, Administrateur !</p>
-		{% elseif is_granted('ROLE_EMPLOYE') %}
-			<p>Bienvenue, Employé !</p>
-		{% elseif is_granted('ROLE_VETERINAIRE') %}
-			<p>Bienvenue, Vétérinaire !</p>
-		{% endif %}
+<div class="container mt-4">
+    {% block body %}{% endblock %}
+</div>
 
-		<div class="container mt-4"> {% block body %}{% endblock %}
-			</div>
-
-			{% for label, messages in app.flashes %}
-				<div class="alert alert-{{ label }}">
-					{% for message in messages %}
-						<p>{{ message }}</p>
-					{% endfor %}
-				</div>
-			{% endfor %}
-		</body>
-	</html>
+{% for label, messages in app.flashes %}
+    <div class="alert alert-{{ label }}">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
+</body>
+</html>

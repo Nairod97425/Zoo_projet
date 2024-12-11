@@ -7,15 +7,18 @@
 home:
     path: /
     controller: App\Controller\HomeController::index
+    
 
 app_register:
     path: /register
     controller: App\Controller\RegistrationController::register
+    methods: ['GET', 'POST']
 
 app_login:
     path: /login
     controller: App\Controller\SecurityController::login
-
+    methods: ['GET', 'POST']
+    
 app_logout:
     path: /logout
 

@@ -2,27 +2,27 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier l'habitat{% endblock %}
+{% block title %}Modifier l'Habitat{% endblock %}
 
 {% block body %}
-    <h1>Modifier l'habitat</h1>
+    <div class="container">
+        <h1>Modifier l'Habitat</h1>
 
-    {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.images, {'attr': {'multiple': 'multiple'}}) }}
-        {{ form_row(form.animals) }}
-        {# <button class="btn btn-primary" type="submit">Enregistrer</button> #}
-   
+        {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
+            {{ form_row(form.name) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.images, {'attr': {'multiple': 'multiple'}}) }}
+            {{ form_row(form.animals) }}
 
-        {# Champ pour télécharger une nouvelle image #}
-        <div>
-            <label for="image_field_name">Télécharger une nouvelle image</label>
-            <input type="file" name="image_field_name" id="image_field_name" />
-        </div>
+            {# Champ pour télécharger une nouvelle image #}
+            <div class="mb-3">
+                <label for="image_field_name" class="form-label">Télécharger une nouvelle image</label>
+                <input type="file" name="image_field_name" id="image_field_name" class="form-control" />
+            </div>
 
-        <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
-    {{ form_end(form) }}
+            <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+        {{ form_end(form) }}
 
-    <a href="{{ path('habitat_index') }}">Retour à la liste des habitats</a>
+        <a href="{{ path('habitat_index') }}" class="btn btn-secondary mt-3">Retour à la Liste des Habitats</a>
+    </div>
 {% endblock %}

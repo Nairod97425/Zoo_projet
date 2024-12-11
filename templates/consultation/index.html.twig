@@ -3,36 +3,42 @@
 {% block title %}Liste des Consultations{% endblock %}
 
 {% block body %}
-    <h1>Liste des Consultations</h1>
+    <div class="container">
+        <h1>Liste des Consultations</h1>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Animal</th>
-                <th>Habitat</th>
-                <th>Date</th>
-                <th>Nombre de consultations</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for consultation in consultations %}
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>{{ consultation.Animal_id.Prenom }}</td>
-                    <td>{{ consultation.Habitat_id.Name }}</td>
-                    <td>{{ consultation.Date|date('Y-m-d') }}</td>
-                    <td>{{ consultation.Nombre_de_consultation }}</td>
-                    <td>
-                        <a href="{{ path('consultation_edit', {id: consultation.id}) }}">Modifier</a>
-                        <form action="{{ path('consultation_delete', {id: consultation.id}) }}" method="post" style="display:inline;">
-                            <input type="hidden" name="_method" value="DELETE">
-                            <button type="submit">Supprimer</button>
-                        </form>
-                    </td>
+                    <th>Animal</th>
+                    <th>Habitat</th>
+                    <th>Date</th>
+                    <th>Nombre de Consultations</th>
+                    <th>Actions</th>
                 </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                {% for consultation in consultations %}
+                    <tr>
+                        <td>{{ consultation.animal_id.prenom }}</td>
+                        <td>{{ consultation.habitat_id.name }}</td>
+                        <td>{{ consultation.date|date('Y-m-d') }}</td>
+                        <td>{{ consultation.nombre_de_consultation }}</td>
+                        <td>
+                            <a href="{{ path('consultation_edit', {id: consultation.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                            <form action="{{ path('consultation_delete', {id: consultation.id}) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ consultation.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette consultation ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="5">Aucune consultation trouvée</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-    <a href="{{ path('consultation_new') }}">Ajouter une nouvelle consultation</a>
+        <a href="{{ path('consultation_new') }}" class="btn btn-primary">Ajouter une Nouvelle Consultation</a>
+    </div>
 {% endblock %}

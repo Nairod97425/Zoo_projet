@@ -2,38 +2,44 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des habitats
-{% endblock %}
+{% block title %}Liste des Habitats{% endblock %}
 
 {% block body %}
-	<h1>Liste des habitats</h1>
+    <div class="container">
+        <h1>Liste des Habitats</h1>
 
-	<ul>
-		{% for habitat in habitats %}
-			<li>
-				<strong>{{ habitat.name }}</strong>
+        <ul class="list-unstyled">
+            {% for habitat in habitats %}
+                <li class="mb-4">
+                    <strong>{{ habitat.name }}</strong>
 
-				{% for image in habitat.images %}
-					<img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ habitat.name }}">
-				{% endfor %}
+                    <div class="mb-2">
+                        {% for image in habitat.images %}
+                            <img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ habitat.name }}" style="width: 100px; height: auto; margin-right: 5px;">
+                        {% endfor %}
+                    </div>
 
-				<p>{{ habitat.description }}</p>
+                    <p>{{ habitat.description }}</p>
 
-				{# Lien vers la page des détails de l'habitat et des animaux #}
-				<a href="{{ path('habitat_show', {'id': habitat.id}) }}">Voir les animaux de cet habitat</a>
+                    {# Lien vers la page des détails de l'habitat et des animaux #}
+                    <a href="{{ path('habitat_show', {'id': habitat.id}) }}" class="btn btn-info">Voir les Animaux de Cet Habitat</a>
 
-				{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
-					<a href="{{ path('habitat_edit', {id: habitat.getId()}) }}">Modifier</a>
-					<form action="{{ path('habitat_delete', {id: habitat.getId()}) }}" method="POST" style="display:inline;">
-						<button type="submit" class="btn btn-danger">Supprimer</button>
-					</form>
-				{% endif %}
-			</li>
-		{% endfor %}
-	</ul>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+                        <a href="{{ path('habitat_edit', {id: habitat.id}) }}" class="btn btn-warning">Modifier</a>
+                        <form action="{{ path('habitat_delete', {id: habitat.id}) }}" method="POST" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ habitat.id) }}">
+                            <button type="submit" class="btn btn-danger">Supprimer</button>
+                        </form>
+                    {% endif %}
+                </li>
+            {% else %}
+                <li>Aucun habitat trouvé.</li>
+            {% endfor %}
+        </ul>
 
-	{# Bouton "Ajouter un habitat" accessible uniquement aux ROLE_ADMIN ou ROLE_EMPLOYE #}
-	{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
-		<a href="{{ path('habitat_new') }}" class="btn btn-primary mb-3">Ajouter un habitat</a>
-	{% endif %}
+        {# Bouton "Ajouter un habitat" accessible uniquement aux ROLE_ADMIN ou ROLE_EMPLOYE #}
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+            <a href="{{ path('habitat_new') }}" class="btn btn-primary mb-3">Ajouter un Habitat</a>
+        {% endif %}
+    </div>
 {% endblock %}
