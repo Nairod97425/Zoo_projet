@@ -57,29 +57,29 @@
 
 # docker-compose.yaml
 services:
-
   php:
+    image: php:8.3-fpm
     build: ./  # Utilise le Dockerfile local pour construire l'image
     volumes:
       - ./:/var/www/html  # Partage les fichiers du projet avec PHP
     networks:
       - app_network
     depends_on:
-      - mysqldb 
+      - mysqldb
 
   nginx:
     image: nginx:1.22-alpine
     ports:
       - "8080:80"  # Expose le port 80 de Nginx sur le port 8080 local
+      - "443:443"  # Expose le port 443 de Nginx pour HTTPS
     volumes:
       - ./:/var/www/html  # Montre le projet local dans le conteneur
-      - ./nginx.conf:/etc/nginx/nginx.conf  # Utilise un fichier nginx.conf personnalisé
+      - ./config/nginx.conf:/etc/nginx/nginx.conf  # Utilise un fichier nginx.conf personnalisé
+      - ./certificates:/etc/nginx/certificates  # Montre les certificats SSL
     networks:
       - app_network
     depends_on:
       - php  # Assurez-vous que PHP démarre avant Nginx
-
-   # Assurez-vous que MySQL est prêt avant PHP
 
   mysqldb:
     image: mysql:8.2

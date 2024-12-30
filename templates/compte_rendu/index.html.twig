@@ -1,0 +1,42 @@
+{# templates/compte_rendu/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Comptes Rendus
+{% endblock %}
+
+{% block body %}
+	<h1>Liste des Comptes Rendus</h1>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Description</th>
+				<th>Animal</th>
+				<th>Date</th>
+				<th>Statut</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for compteRendu in compteRendus %}
+				<tr>
+					<td>{{ compteRendu.description }}</td>
+					<td>{{ compteRendu.animal.name }}</td>
+					<td>{{ compteRendu.date|date('Y-m-d H:i') }}</td>
+					<td>{{ compteRendu.status }}</td>
+					<td>
+						<a href="{{ path('compte_rendu_edit', {id: compteRendu.id}) }}" class="btn btn-warning">Modifier</a>
+						<form method="post" action="{{ path('compte_rendu_delete', {id: compteRendu.id}) }}" style="display:inline;">
+							<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ compteRendu.id) }}">
+							<button class="btn btn-danger" type="submit">Supprimer</button>
+						</form>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="5">Aucun compte rendu trouvé.</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<a href="{{ path('compte_rendu_new') }}" class="btn btn-primary">Créer un Compte Rendu</a>
+{% endblock %}

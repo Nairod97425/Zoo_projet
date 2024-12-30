@@ -1,56 +1,43 @@
 {# templates/employe/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Tableau de Bord Employé{% endblock %}
+{% block title %}Tableau de Bord Employé
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Bienvenue dans le Tableau de Bord Employé</h1>
-        <p>Voici un aperçu de vos activités et informations.</p>
-        
-        {# Contenu spécifique pour le tableau de bord de l'employé #}
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        Informations Personnelles
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Nom :</strong> {{ app.user.name }}</p>
-                        <p><strong>Email :</strong> {{ app.user.email }}</p>
-                        {# Ajoutez d'autres informations si nécessaire #}
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        Tâches Récentes
-                    </div>
-                    <div class="card-body">
-                        <ul>
-                            {# Remplacez par des tâches dynamiques #}
-                            <li>Tâche 1</li>
-                            <li>Tâche 2</li>
-                            <li>Tâche 3</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        Notifications
-                    </div>
-                    <div class="card-body">
-                        <ul>
-                            {# Remplacez par des notifications dynamiques #}
-                            <li>Notification 1</li>
-                            <li>Notification 2</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+	<div class="container">
+		<h1>Bienvenue dans le Tableau de Bord Employé</h1>
+
+		{# Contenu spécifique pour le tableau de bord de l'employé #}
+		<div class="row">
+			<div class="col-md-4">
+				<div class="card">
+					<div class="card-header">
+						Informations Personnelles
+					</div>
+					<div class="card-body">
+						<p>
+							<strong>Email :</strong>
+							{{ app.user.email }}
+						</p>
+						{# Ajoutez d'autres informations si nécessaire #}
+					</div>
+				</div>
+			</div>
+			<div class="row mt-3 d-flex justify-content-center">
+				<div class="d-flex justify-content-center mb-3">
+					<a class="btn btn-primary mx-2 flex-fill" href="{{ path('habitat_new') }}">Créer un habitat</a>
+					<a class="btn btn-secondary mx-2 flex-fill" href="{{ path('habitat_index') }}">Liste des habitats</a>
+				</div>
+				<div class="d-flex justify-content-center mb-3">
+					<a class="btn btn-primary mx-2 flex-fill" href="{{ path('animal_create') }}">Ajouter un animal</a>
+					<a class="btn btn-secondary mx-2 flex-fill" href="{{ path('list_animal_employer') }}">Voir tous les animaux</a>
+				</div>
+				<div class="d-flex justify-content-center mb-3">
+					<a class="btn btn-primary mx-2 flex-fill" href="{{ path('compte_rendu_new') }}">Créer un Compte Rendu</a>
+					<a class="btn btn-secondary mx-2 flex-fill" href="{{ path('compte_rendu_index') }}">Liste des Comptes Rendus</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>{% endblock %}

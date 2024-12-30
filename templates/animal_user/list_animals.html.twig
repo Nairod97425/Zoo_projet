@@ -1,0 +1,61 @@
+{# templates/animal_user/list_animals.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Animaux
+{% endblock %}
+
+{% block body %}
+	<div class="container">
+		<h1>Liste des Animaux dans l'Habitat:
+			{{ habitat.name }}</h1>
+
+		{% if animals is not empty %}
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Nom</th>
+						<th>Espèce</th>
+						<th>Date de Naissance</th>
+						<th>État de Santé</th>
+						<th>Horaire de Nourriture</th>
+						<th>Description</th>
+						<th>Images</th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for animal in animals %}
+						<tr>
+							<td>{{ animal.name }}</td>
+							<td>{{ animal.species }}</td>
+							<td>{{ animal.birthDate ? animal.birthDate|date('d/m/Y') : 'Date inconnue' }}</td>
+							<td>{{ animal.healthStatus }}</td>
+							<td>{{ animal.feedingSchedule }}</td>
+							<td>{{ animal.description }}</td>
+							<td>
+								{% for image in animal.image %}
+									<img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ animal.name }}" style="width: 100px; height: auto; margin-right: 5px;">
+								{% endfor %}
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{# {% for habitat in habitats %} #}
+			<h3>Avis:</h3>
+			{% for avis in habitat.avis %}
+
+				<div>
+					<strong>{{ avis.user.username }}</strong>:
+					<p>{{ avis.avis }}</p>
+				</div>
+			{% else %}
+				<p>Aucun avis pour cet habitat.</p>
+			{% endfor %}
+			<a class="btn btn-info" href="{{ path('avis_new', { 'id': habitat.id }) }}">Laisser un Avis</a>
+			{# {% endfor %} #}
+		{% else %}
+			<p>Aucun animal trouvé pour cet habitat.</p>
+		{% endif %}
+	</div>
+{% endblock %}

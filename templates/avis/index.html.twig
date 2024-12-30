@@ -1,44 +1,20 @@
 {% extends 'base.html.twig' %}
+{# templates/avis/index.html.twig #}
 
-{% block title %}Liste des Avis{% endblock %}
+{% block title %}Liste des Avis
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Liste des Avis</h1>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Pseudo</th>
-                    <th>Avis</th>
-                    <th>Statut</th>
-                    <th>Habitat</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for avis in avis %}
-                    <tr>
-                        <td>{{ avis.pseudo }}</td>
-                        <td>{{ avis.avis }}</td>
-                        <td>{{ avis.statuf ? 'Approuvé' : 'En attente' }}</td>
-                        <td>{{ avis.habitat.name }}</td>
-                        <td>
-                            <a href="{{ path('avis_edit', {id: avis.id_Avis}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                            <form action="{{ path('avis_delete', {id: avis.id_Avis}) }}" method="post" style="display:inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ avis.id_Avis) }}">
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet avis ?');">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="5">Aucun avis trouvé</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <a href="{{ path('avis_new') }}" class="btn btn-primary">Ajouter un Avis</a>
-    </div>
+	<div class="container">
+		<h1>Avis des Utilisateurs</h1>
+		<ul>
+			{% for avis in avis %}
+				<li>{{ avis.pseudo }}:
+					{{ avis.avis }}
+					({{ avis.statut ? 'Approuvé' : 'En attente' }}) -
+					{{ avis.habitat }}</li>
+			{% endfor %}
+		</ul>
+		<a href="{{ path('avis_new') }}">Ajouter un avis</a>
+	</div>
 {% endblock %}

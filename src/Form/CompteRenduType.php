@@ -1,40 +1,47 @@
 <?php
 // src/Form/CompteRenduType.php
+
 namespace App\Form;
 
 use App\Entity\CompteRendu;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Entity\Animal;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class CompteRenduType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('description', TextType::class, [
                 'label' => 'Description',
-                'required' => true,
+                'attr' => ['placeholder' => 'Entrez la description du compte rendu'],
             ])
             ->add('animal', EntityType::class, [
-                'class' => 'App\Entity\Animal',
-                'choice_label' => 'name',  // Assurez-vous que 'name' est une propriété de l'entité Animal
+                'class' => Animal::class,
+                'choice_label' => 'name',
                 'label' => 'Animal',
-                'required' => true,
             ])
             ->add('date', DateTimeType::class, [
-                'label' => 'Date',
                 'widget' => 'single_text',
-                'required' => true,
+                'label' => 'Date',
+            ])
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'À faire' => 'à faire',
+                    'Fait' => 'fait',
+                ],
+                'label' => 'Statut',
             ]);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        
         $resolver->setDefaults([
             'data_class' => CompteRendu::class,
         ]);

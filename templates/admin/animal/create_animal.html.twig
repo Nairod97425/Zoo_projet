@@ -1,0 +1,38 @@
+{# templates/admin_animal/create.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Animal{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Ajouter un Nouvel Animal</h1>
+        
+        {# Afficher les erreurs de formulaire si elles existent #}
+        {% if app.session.flashbag.has('error') %}
+            <div class="alert alert-danger">
+                {% for message in app.session.flashbag.get('error') %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {# Démarrage du formulaire #}
+        {{ form_start(form) }}
+
+            {# Ajout des champs du formulaire #}
+            {{ form_row(form.name) }}
+            {{ form_row(form.species) }}
+            {{ form_row(form.birthDate) }}
+            {{ form_row(form.healthStatus) }}
+            {{ form_row(form.feedingSchedule) }}
+            {{ form_row(form.habitat) }}
+            {{ form_row(form.description) }}
+            {{ form_row(form.image) }}
+
+            {# Bouton pour soumettre le formulaire #}
+            <button type="submit" class="btn btn-primary">Sauvegarder l'Animal</button>
+
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

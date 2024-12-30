@@ -20,7 +20,7 @@ class CompteRenduRepository extends ServiceEntityRepository
      * @param array $filters
      * @return CompteRendu[]
      */
-    public function findByFilters(array $filters)
+    public function findByFilters(array $filters): array
     {
         $qb = $this->createQueryBuilder('cr');
 
@@ -40,10 +40,10 @@ class CompteRenduRepository extends ServiceEntityRepository
     /**
      * Exemple de méthode personnalisée pour récupérer les comptes rendus par animal.
      *
-     * @param $animalId
+     * @param int $animalId
      * @return CompteRendu[]
      */
-    public function findByAnimal($animalId)
+    public function findByAnimal(int $animalId): array
     {
         return $this->createQueryBuilder('cr')
             ->where('cr.animal = :animal')

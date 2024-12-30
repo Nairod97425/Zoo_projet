@@ -1,29 +1,59 @@
 <?php
-// src/Entity/Avis.php
+
 namespace App\Entity;
 
+use App\Repository\AvisRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: 'App\Repository\AvisRepository')]
+#[ORM\Entity(repositoryClass: AvisRepository::class)]
 class Avis
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
-
-    #[ORM\ManyToOne(targetEntity: 'App\Entity\Habitat', inversedBy: 'avis')]
-    #[ORM\JoinColumn(nullable: false)]
-    private $habitat;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'text')]
-    private $comment;
+    private ?string $avis = null; // Le contenu de l'avis
 
-    // Getters et setters
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $statut = true; // Statut par défaut à true
+
+    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'avis')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Habitat $habitat = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getAvis(): ?string
+    {
+        return $this->avis;
+    }
+
+    public function setAvis(string $avis): self
+    {
+        $this->avis = $avis;
+
+        return $this;
+    }
+
+    public function getStatut(): ?bool
+    {
+        return $this->statut;
+    }
+
+    public function setStatut(bool $statut): self
+    {
+        $this->statut = $statut;
+
+        return $this;
     }
 
     public function getHabitat(): ?Habitat
@@ -38,16 +68,14 @@ class Avis
         return $this;
     }
 
-    public function getComment(): ?string
+    public function getUser(): ?User
     {
-        return $this->comment;
+        return $this->user;
     }
 
-    public function setComment(string $comment): self
+    public function setUser(?User $user): self
     {
-        $this->comment = $comment;
-
+        $this->user = $user;
         return $this;
     }
 }
-

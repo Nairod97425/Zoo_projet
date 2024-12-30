@@ -1,0 +1,16 @@
+{# templates/avis/new.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un Avis{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Laisser un Avis sur {{ habitat.name }}</h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn btn-primary">Soumettre</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

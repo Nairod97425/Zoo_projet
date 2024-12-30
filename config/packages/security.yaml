@@ -12,6 +12,8 @@ security:
 
     firewalls:
         main:
+            # C'est ici que vous configurez votre authentification
+            pattern: ^/.*$
             form_login:
                 login_path: app_login
                 check_path: app_login
@@ -30,12 +32,13 @@ security:
 
     access_control:
         - { path: ^/logout, roles: ROLE_USER }
-        - { path: ^/admin_animal/(create|edit|delete), roles: ROLE_EMPLOYE }
+        - { path: ^/admin_animal, roles: ROLE_EMPLOYE }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/veterinaire, roles: ROLE_VETERINAIRE }
-        - { path: ^/avis, roles: ROLE_USER }
+        - { path: ^/avis, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/contact, roles: ROLE_USER }
         - { path: ^/employe, roles: ROLE_EMPLOYE }
-
+        - { path: ^/animal/index, roles: ROLE_EMPLOYE }
         
     # # Contrôles d'accès
     # access_control:
@@ -44,10 +47,6 @@ security:
     #     - { path: ^/avis, roles: ROLE_USER }
     #     - { path: ^/employe, roles: ROLE_EMPLOYE }
     #     # Ajoutez une règle pour les routes accessibles uniquement aux employés
-    #     - { path: ^/admin_animal, roles: ROLE_EMPLOYE }
-    #     - { path: ^/admin_animal/create, roles: ROLE_EMPLOYE }
-    #     - { path: ^/admin_animal/edit, roles: ROLE_EMPLOYE }
-    #     - { path: ^/admin_animal/delete, roles: ROLE_EMPLOYE }
     #     - { path: ^/avis, roles: ROLE_USER }
     #     - { path: ^/register$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
     #     - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }

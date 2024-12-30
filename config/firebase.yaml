@@ -1,0 +1,4 @@
+# config/firebase.yaml
+firebase:
+    service_account_file: '%kernel.project_dir%/config/serviceAccountKey.json'
+    database_uri: 'https://projetZoo.firebaseio.com/'

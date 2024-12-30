@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Contactez-nous{% endblock %}
+
+{% block body %}
+    <h1>Contactez-nous</h1>
+
+    <form id="contact-form">
+        <div>
+            <label for="contact_name">Nom</label>
+            <input type="text" name="contact[name]" id="contact_name" required>
+        </div>
+        <div>
+            <label for="contact_email">Email</label>
+            <input type="email" name="contact[email]" id="contact_email" required>
+        </div>
+        <div>
+            <label for="contact_message">Message</label>
+            <textarea name="contact[message]" id="contact_message" required></textarea>
+        </div>
+        <button type="submit">Envoyer</button>
+    </form>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1P6wmhEvwfq5zsZwtz_YoZbhMC86ON1Q",
+            authDomain: "projetzoo.firebaseapp.com",
+            projectId: "projetzoo",
+            storageBucket: "projetzoo.appspot.com",
+            messagingSenderId: "695187586164",
+            appId: "1:695187586164:web:f9bd5cd4cd35f6eb4ee521",
+            measurementId: "G-SWDN9KR8FZ"
+        };
+
+        // Initialisation Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(app);
+
+        const form = document.querySelector('#contact-form');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const name = document.querySelector('#contact_name').value;
+            const email = document.querySelector('#contact_email').value;
+            const message = document.querySelector('#contact_message').value;
+
+            // Envoi des données à Firestore
+            db.collection("messages")
+                .add({ name, email, message, timestamp: new Date() })
+                .then(() => {
+                    alert("Message envoyé avec succès !");
+                    form.reset();
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'envoi du message : ", error);
+                });
+        });
+    </script>
+{% endblock %}

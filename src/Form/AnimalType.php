@@ -46,8 +46,9 @@ class AnimalType extends AbstractType
                 'required' => false,
             ])
             ->add('image', FileType::class, [
-                'label' => 'Image',
-                'mapped' => false,
+                'label' => 'Images',
+                'multiple' => true,  // Autoriser plusieurs fichiers
+                'mapped' => false,    // Gardez cela si vous gérez les images manuellement
                 'required' => false,
             ]);
     }

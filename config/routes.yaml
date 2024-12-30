@@ -1,8 +1,8 @@
-# controllers:
-#     resource:
-#         path: ../src/Controller/
-#         namespace: App\Controller
-#     type: attribute
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
 
 home:
     path: /
@@ -38,38 +38,113 @@ app_employe_dashboard:
     path: /employe/dashboard
     controller: App\Controller\EmployeController::dashboard
 
+#Gestion User
+
+# Route pour la création d'un utilisateur
+user_create:
+    path: /admin/user/create
+    controller: App\Controller\AdminController::createUser
+    methods: [GET, POST]
+
+# Route pour l'édition d'un utilisateur
+user_edit:
+    path: /admin/user/edit/{id}
+    controller: App\Controller\AdminController::editUser
+    methods: [GET, POST]
+
+# Route pour la suppression d'un utilisateur
+user_delete:
+    path: /admin/user/delete/{id}
+    controller: App\Controller\AdminController::deleteUser
+    methods: [POST]
+
+user_list:
+    path: /admin/user/list_users
+    controller: App\Controller\\AdminController::listUsers
+
+#Gestion Habitat
+
+# Route pour la création d'un habitat
 habitat_new:
     path: /habitat/new
     controller: App\Controller\HabitatController::new
     methods: [GET, POST]
 
+# Route pour l'édition d'un habitat
+habitat_edit:
+    path: /habitat/edit/{id}
+    controller: App\Controller\HabitatController::edit
+    methods: [GET, POST]
+
+# Route pour la suppression d'un habitat
+habitat_delete:
+    path: /habitat/delete/{id}
+    controller: App\Controller\HabitatController::delete
+    methods: [POST]
+
 habitat_index:
     path: /habitat
     controller: App\Controller\HabitatController::index
 
-animal_index:
-    path: /admin_animal
-    controller: App\Controller\AdminAnimalController::index
+# habitat_show:
+#     path: /habitat/show/
+#     controller: App\Controller\HabitatController::show
 
-animal_new:
+#Gestion Animal
+
+# Route pour la creation des animaux
+animal_create:
     path: /admin_animal/create
     controller: App\Controller\AdminAnimalController::create
     methods: [GET, POST]
 
+# Route pour l'edition des animaux
 animal_edit:
     path: /admin_animal/edit/{id}
     controller: App\Controller\AdminAnimalController::edit
     methods: [GET, POST]
 
+# Route pour la suppression d'un animal
 animal_delete:
     path: /admin_animal/delete/{id}
     controller: App\Controller\AdminAnimalController::delete
     methods: [POST]
 
-contact:
-    path: /contact
-    controller: App\Controller\ContactController::index
+animal_index:
+    path: /admin_animal
+    controller: App\Controller\AdminAnimalController::index
 
+# Gérer les animaux pour l'admin
+animal_manage:
+    path: /admin/animal/manage_animals
+    controller: App\Controller\AdminController::manageAnimals
+
+admin_animal_new:
+    path: /admin/animal/create
+    controller: App\Controller\AdminController::createAnimal
+
+admin_animal_edit:
+    path: /admin/animal/edit/{id}
+    controller: App\Controller\AdminController::editAnimal
+    requirements:
+        id: '\d+'  # Assure que l'id est un nombre
+
+list_animal:
+    path: /animal_user/list_animals/{habitatId}
+    controller: App\Controller\AdminAnimalController::show
+    requirements:
+        habitatId: '\d+'
+
+list_animal_employer:
+    path: /animal/list/
+    controller: App\Controller\AnimalController::index
+
+admin_animal_delete:
+    path: /admin/animal/delete/{id}
+    controller: App\Controller\AdminController::deleteAnimal
+    requirements:
+        id: '\d+'  # Assure que l'id est un nombre
+        
 about:
     path: /about
     controller: App\Controller\AboutController::index
@@ -90,20 +165,20 @@ admin_delete_user:
     path: /admin/user/delete/{id}
     controller: App\Controller\AdminController::deleteUser
 
-animal_crud:
-    path: /admin_animal/{action}/{id}
-    controller: App\Controller\AdminAnimalController::{action}
-    methods: [GET, POST]
-    requirements:
-        action: create|edit|delete
+# animal_crud:
+#     path: /admin_animal/{action}/{id}
+#     controller: App\Controller\AdminAnimalController::{action}
+#     methods: [GET, POST]
+#     requirements:
+#         action: create|edit|delete
 
-
+# Gérer le route des Avis
 avis_index:
     path: /avis
     controller: App\Controller\AvisController::index
 
 avis_new:
-    path: /avis/new
+    path: /habitat/{id}/avis/new
     controller: App\Controller\AvisController::new
 
 avis_edit:
@@ -114,6 +189,13 @@ avis_delete:
     path: /avis/delete/{id}
     controller: App\Controller\AvisController::delete
     methods: [POST]
+
+# config Contact
+contact:
+    path: /contact
+    controller: App\Controller\ContactController::contact
+    methods: [GET, POST]  # Méthodes HTTP autorisées (par exemple, GET pour afficher le formulaire et POST pour envoyer le message)
+
 
 consultation_index:
     path: /consultations
@@ -129,5 +211,28 @@ consultation_edit:
 
 consultation_delete:
     path: /consultations/delete/{id}
+    methods: POST
     controller: App\Controller\ConsultationController::delete
+
+# config/routes.yaml
+
+compte_rendu_new:
+    path: /compte-rendu/new
+    controller: App\Controller\CompteRenduController::new
+
+compte_rendu_index:
+    path: /compte-rendu
+    controller: App\Controller\CompteRenduController::index
+
+compte_rendu_edit:
+    path: /compte-rendu/edit/{id}
+    controller: App\Controller\CompteRenduController::edit
+    requirements:
+        id: \d+  # S'assure que l'id est un nombre
+
+compte_rendu_delete:
+    path: /compte-rendu/delete/{id}
+    controller: App\Controller\CompteRenduController::delete
     methods: [POST]
+    requirements:
+        id: \d+  # S'assure que l'id est un nombre

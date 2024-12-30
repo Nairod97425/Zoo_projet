@@ -22,6 +22,7 @@ class AppFixtures extends Fixture
         $admin = new User();
         $admin->setEmail('admin@gmail.com');
         $admin->setRoles(['ROLE_ADMIN']);
+        $admin->setPseudo('ADMIN1');
         $admin->setPassword($this->passwordHasher->hashPassword($admin, 'admin_password'));
         $manager->persist($admin);
 
@@ -29,6 +30,7 @@ class AppFixtures extends Fixture
         $veterinaire = new User();
         $veterinaire->setEmail('veterinaire@example.com');
         $veterinaire->setRoles(['ROLE_VETERINAIRE']);
+        $veterinaire->setPseudo('VETERINAIRE1');
         $veterinaire->setPassword($this->passwordHasher->hashPassword($veterinaire, 'veterinaire_password'));
         $manager->persist($veterinaire);
 
@@ -36,6 +38,7 @@ class AppFixtures extends Fixture
         $employe = new User();
         $employe->setEmail('employe@example.com');
         $employe->setRoles(['ROLE_EMPLOYE']);
+        $employe->setPseudo('EMPLOYE1');
         $employe->setPassword($this->passwordHasher->hashPassword($employe, 'employe_password'));
         $manager->persist($employe);
 

@@ -13,16 +13,18 @@
                     <th>Habitat</th>
                     <th>Date</th>
                     <th>Nombre de Consultations</th>
+                    <th>État de Santé</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for consultation in consultations %}
                     <tr>
-                        <td>{{ consultation.animal_id.prenom }}</td>
-                        <td>{{ consultation.habitat_id.name }}</td>
+                        <td>{{ consultation.animal.name }}</td>
+                        <td>{{ consultation.habitat.name }}</td>
                         <td>{{ consultation.date|date('Y-m-d') }}</td>
                         <td>{{ consultation.nombre_de_consultation }}</td>
+                        <td>{{ consultation.healthStatus }}</td>
                         <td>
                             <a href="{{ path('consultation_edit', {id: consultation.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                             <form action="{{ path('consultation_delete', {id: consultation.id}) }}" method="post" style="display:inline;">
@@ -33,7 +35,7 @@
                     </tr>
                 {% else %}
                     <tr>
-                        <td colspan="5">Aucune consultation trouvée</td>
+                        <td colspan="6">Aucune consultation trouvée</td>
                     </tr>
                 {% endfor %}
             </tbody>

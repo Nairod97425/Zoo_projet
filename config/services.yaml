@@ -1,7 +1,14 @@
+parameters:
+    images_directory: '%kernel.project_dir%/public/uploads/images'
+
+    uploads_directory: '%kernel.project_dir%/public/uploads/' # Répertoire où vous souhaitez stocker les fichiers uploadés
+
+    firebase_credentials: '%kernel.project_dir%/config/serviceAccountKey.json'
+
 services:
     Symfony\Component\Security\Csrf\CsrfTokenManager:
         tags: ['csrf.token_manager']
-        
+
     Symfony\Component\HttpFoundation\Session\SessionInterface: '@session'
 
     _defaults:
@@ -17,6 +24,27 @@ services:
             - '../src/DependencyInjection/'
             - '../src/{Entity,Migrations,Tests}'
             - '../src/Kernel.php'
+    
+    App\Service\FirebaseService:
+        arguments:
+            $firebaseCredentials: '%env(FIREBASE_PRIVATE_KEY_PATH)%'
+            
+    App\Entity\Habitat:
+        autowire: true  # Assurez-vous que cela est true ou retirez la configuration
+        autoconfigure: true
+
+    App\Service\HabitatService:
+        arguments:
+            $habitatRepository: '@App\Repository\HabitatRepository' # Injection manuelle si besoin        
+
+    
+    App\Service\FileUploader:
+        arguments:
+            $uploadsDirectory: '%uploads_directory%' # Utilisation du paramètre défini
+    
+    App\Service\FileUploaderAnimal:
+        arguments:
+            $imagesDirectory: '%images_directory%' # Utilisation du paramètre défini
 
     # Register your custom authenticator as a service
     App\Security\AuthAuthenticator:

@@ -1,9 +1,11 @@
 <?php
-// src/Entity/Animal.php
+
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 #[ORM\Entity(repositoryClass: 'App\Repository\AnimalRepository')]
 #[ORM\Table(name: 'animal')]
@@ -11,38 +13,50 @@ class Animal
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'id_animal', type: 'integer')]
-    private $id;
-
-    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'animals')]
-    #[ORM\JoinColumn(nullable: true)]
-    private ?Habitat $habitat = null;
+    #[ORM\Column(type: 'integer')]
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private $name;
+    private string $name;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private $species;
+    private string $species;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
-    private $birthDate;
+    private ?\DateTimeInterface $birthDate = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Assert\NotBlank]
-    private $healthStatus;
+    private string $healthStatus;
 
     #[ORM\Column(type: 'text')]
     #[Assert\NotBlank]
-    private $feedingSchedule;
+    private string $feedingSchedule;
 
     #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    #[ORM\Column(type: 'string', length: 255, nullable: true)]
-    private ?string $image = null;
+    #[ORM\Column(type: 'json', nullable: true)]
+    private array $image = [];
+    
+    #[ORM\ManyToOne(targetEntity: Habitat::class, inversedBy: 'animals')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $habitat;
+
+    #[ORM\OneToMany(targetEntity: CompteRendu::class, mappedBy: 'animal')]
+    private Collection $compteRendus;
+
+    #[ORM\OneToMany(targetEntity: Consultation::class, mappedBy: 'animal')]
+    private Collection $consultations;
+
+    public function __construct()
+    {
+        $this->compteRendus = new ArrayCollection();
+        $this->consultations = new ArrayCollection();
+    }
 
     // Getters et setters
 
@@ -59,11 +73,10 @@ class Animal
     public function setHabitat(?Habitat $habitat): self
     {
         $this->habitat = $habitat;
-
         return $this;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
@@ -71,11 +84,10 @@ class Animal
     public function setName(string $name): self
     {
         $this->name = $name;
-
         return $this;
     }
 
-    public function getSpecies(): ?string
+    public function getSpecies(): string
     {
         return $this->species;
     }
@@ -83,7 +95,6 @@ class Animal
     public function setSpecies(string $species): self
     {
         $this->species = $species;
-
         return $this;
     }
 
@@ -95,11 +106,10 @@ class Animal
     public function setBirthDate(\DateTimeInterface $birthDate): self
     {
         $this->birthDate = $birthDate;
-
         return $this;
     }
 
-    public function getHealthStatus(): ?string
+    public function getHealthStatus(): string
     {
         return $this->healthStatus;
     }
@@ -107,11 +117,10 @@ class Animal
     public function setHealthStatus(string $healthStatus): self
     {
         $this->healthStatus = $healthStatus;
-
         return $this;
     }
 
-    public function getFeedingSchedule(): ?string
+    public function getFeedingSchedule(): string
     {
         return $this->feedingSchedule;
     }
@@ -119,7 +128,6 @@ class Animal
     public function setFeedingSchedule(string $feedingSchedule): self
     {
         $this->feedingSchedule = $feedingSchedule;
-
         return $this;
     }
 
@@ -131,19 +139,27 @@ class Animal
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-
         return $this;
     }
 
-    public function getImage(): ?string
+    public function getImage(): array
     {
         return $this->image;
     }
 
-    public function setImage(?string $image): self
+    public function setImage(array $image): self
     {
         $this->image = $image;
-
         return $this;
+    }
+
+    public function getCompteRendus(): Collection
+    {
+        return $this->compteRendus;
+    }
+
+    public function getConsultations(): Collection
+    {
+        return $this->consultations;
     }
 }

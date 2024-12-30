@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Animaux{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des Animaux</h1>
+
+        <a href="{{ path('animal_new') }}" class="btn btn-primary mb-3">Ajouter un Nouvel Animal</a>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Nom</th>
+                    <th>Espèce</th>
+                    <th>Date de Naissance</th>
+                    <th>État de Santé</th>
+                    <th>Horaire de Nourriture</th>
+                    <th>Habitat</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for animal in animals %}
+                    <tr>
+                        <td>
+                            {% if animal.image is not empty %}
+                                {% for image in animal.image %}
+                                    <img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ animal.name }}" style="width: 100px; height: auto; margin-right: 5px;">
+                                {% endfor %}
+                            {% else %}
+                                <p>Aucune image disponible.</p>
+                            {% endif %}
+                        </td>
+                        <td>{{ animal.name }}</td>
+                        <td>{{ animal.species }}</td>
+                        <td>{{ animal.birthDate ? animal.birthDate|date('d/m/Y') : 'Date inconnue' }}</td>
+                        <td>{{ animal.healthStatus }}</td>
+                        <td>{{ animal.feedingSchedule }}</td>
+                        <td>{{ animal.habitat ? animal.habitat.name : 'Aucun habitat' }}</td>
+                        <td>
+                            <a href="{{ path('animal_edit', {'id': animal.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                            {# Formulaire pour supprimer un animal #}
+                            <form action="{{ path('animal_delete', {'id': animal.id}) }}" method="post" style="display:inline;">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ animal.id) }}">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet animal ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8">Aucun animal trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -19,6 +19,13 @@ class AnimalRepository extends ServiceEntityRepository
         parent::__construct($registry, Animal::class);
     }
 
-    // Ajoutez des méthodes personnalisées si nécessaire
+    public function findByHabitatId(int $habitatId)
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.habitat = :habitatId')
+            ->setParameter('habitatId', $habitatId)
+            ->getQuery()
+            ->getResult();
+    }
 }
 

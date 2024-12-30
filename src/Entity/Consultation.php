@@ -2,84 +2,96 @@
 
 namespace App\Entity;
 
-use App\Repository\ConsultationRenduRepository;
+use App\Repository\ConsultationRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\ConsultationRepository")
- */
-#[ORM\Entity(repositoryClass: ConsultationRenduRepository::class)]
+#[ORM\Entity(repositoryClass: ConsultationRepository::class)]
+#[ORM\Table(name: 'Consultation')]
 class Consultation
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private ?int $id_Consultation = null;
+    private ?int $idConsultation = null;
 
-    #[ORM\ManyToOne(targetEntity: Habitat::class)]
-    #[ORM\JoinColumn(name: 'id_habitat', referencedColumnName: 'id')]
-    private ?Habitat $habitat = null;
-
-    #[ORM\ManyToOne(targetEntity: 'App\Entity\Animal')]
+    #[ORM\ManyToOne(targetEntity: Animal::class, inversedBy: 'consultations')]
     #[ORM\JoinColumn(name: 'id_animal', referencedColumnName: 'id')]
-    private ?Animal $animal;
+    private ?Animal $animal = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'consultations')]
+    #[ORM\JoinColumn(name: 'id_user', referencedColumnName: 'id')]
+    private ?User $user = null;
 
     #[ORM\Column(type: 'date')]
     #[Assert\NotBlank]
-    private ?\DateTimeInterface $Date = null;
+    private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(type: 'integer', nullable: true)]
-    private ?int $Nombre_de_consultation = null;
+    private ?int $nombreDeConsultation = null;
+
+    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank]
+    private string $healthStatus;
 
     // Getters et Setters
     public function getId(): ?int
     {
-        return $this->id_Consultation;
-    }
-
-    public function getHabitat(): ?Habitat
-    {
-        return $this->habitat;
-    }
-
-    public function setHabitat(Habitat $habitat): self
-    {
-        $this->habitat = $habitat;
-        return $this;
+        return $this->idConsultation;
     }
 
     public function getAnimal(): ?Animal
     {
-        return $this->animal; // Utilisation correcte de $animal
+        return $this->animal;
     }
 
     public function setAnimal(Animal $animal): self
     {
-        $this->animal = $animal; // Utilisation correcte de $animal
+        $this->animal = $animal;
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
         return $this;
     }
 
     public function getDate(): ?\DateTimeInterface
     {
-        return $this->Date;
+        return $this->date;
     }
 
     public function setDate(\DateTimeInterface $date): self
     {
-        $this->Date = $date;
+        $this->date = $date;
         return $this;
     }
 
     public function getNombreDeConsultation(): ?int
     {
-        return $this->Nombre_de_consultation;
+        return $this->nombreDeConsultation;
     }
 
     public function setNombreDeConsultation(?int $nombreDeConsultation): self
     {
-        $this->Nombre_de_consultation = $nombreDeConsultation;
+        $this->nombreDeConsultation = $nombreDeConsultation;
+        return $this;
+    }
+
+    public function getHealthStatus(): string
+    {
+        return $this->healthStatus;
+    }
+
+    public function setHealthStatus(string $healthStatus): self
+    {
+        $this->healthStatus = $healthStatus;
         return $this;
     }
 }

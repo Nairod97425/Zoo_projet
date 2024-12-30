@@ -2,34 +2,41 @@
 
 namespace App\Entity;
 
+use App\Repository\HabitatRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
-
-#[ORM\Entity(repositoryClass: 'App\Repository\HabitatRepository')]
+#[ORM\Entity(repositoryClass: HabitatRepository::class)]
 #[ORM\Table(name: 'habitat')]
 class Habitat
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
-    private $id;
+    private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 255)]
-    private $name;
+    private ?string $name = null;
 
     #[ORM\Column(type: 'text', nullable: true)]
-    private $description;
+    private ?string $description = null;
 
-    #[ORM\OneToMany(targetEntity: 'App\Entity\Avis', mappedBy: 'habitat', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
     private Collection $avis;
 
-    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: Animal::class, mappedBy: 'habitat')]
     private Collection $animals;
 
     #[ORM\Column(type: 'json', nullable: true)]
     private array $images = [];
+
+    public function __construct(string $name)
+    {
+        $this->avis = new ArrayCollection();
+        $this->animals = new ArrayCollection();
+        $this->name = $name;
+    }
 
     public function getImages(): array
     {
@@ -54,13 +61,6 @@ class Habitat
     {
         $this->images = array_filter($this->images, fn($img) => $img !== $image);
         return $this;
-    }
-
-
-    public function __construct()
-    {
-        $this->avis = new ArrayCollection();
-        $this->animals = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -90,9 +90,6 @@ class Habitat
         return $this;
     }
 
-    /**
-     * @return Collection<int, Avis>
-     */
     public function getAvis(): Collection
     {
         return $this->avis;
@@ -104,7 +101,6 @@ class Habitat
             $this->avis->add($avis);
             $avis->setHabitat($this);
         }
-
         return $this;
     }
 
@@ -115,13 +111,9 @@ class Habitat
                 $avis->setHabitat(null);
             }
         }
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Animal>
-     */
     public function getAnimals(): Collection
     {
         return $this->animals;
@@ -130,10 +122,9 @@ class Habitat
     public function addAnimal(Animal $animal): self
     {
         if (!$this->animals->contains($animal)) {
-            $this->animals->add($animal);
+            $this->animals[] = $animal;
             $animal->setHabitat($this);
         }
-
         return $this;
     }
 
@@ -144,7 +135,6 @@ class Habitat
                 $animal->setHabitat(null);
             }
         }
-
         return $this;
     }
 }

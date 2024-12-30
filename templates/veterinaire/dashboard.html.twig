@@ -26,5 +26,17 @@
             <p>Accédez aux informations sur les animaux et leur état de santé.</p>
             <a href="{{ path('animals_index') }}" class="btn btn-info">Gérer les animaux</a>
         </div>
+
+        <div class="mb-4">
+            <h2>Consultations de Santé</h2>
+            <p>Consultez et gérez les consultations de santé des animaux.</p>
+            <a href="{{ path('consultation_index') }}" class="btn btn-warning">Voir les consultations</a>
+        </div>
+
+        <div class="mb-4">
+            <h2>Notifications</h2>
+            <p>Consultez vos notifications et alertes.</p>
+            <a href="{{ path('notifications_index') }}" class="btn btn-secondary">Voir les notifications</a>
+        </div>
     </div>
 {% endblock %}

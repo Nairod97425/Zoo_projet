@@ -1,25 +1,31 @@
 {# templates/admin/dashboard.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard{% endblock %}
+{% block title %}Dashboard
+{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Dashboard</h1>
-    <p>Bienvenue dans le tableau de bord de l'administration !</p>
-    <div class="row">
-        <div class="col-md-3">
-            <a href="{{ path('admin_create_user') }}" class="btn btn-primary">Créer un nouvel utilisateur</a>
-        </div>
-        <div class="col-md-3">
-            <a href="{{ path('admin_list_user') }}" class="btn btn-secondary">Gérer les utilisateurs</a>
-        </div>
-        <div class="col-md-3">
-            <a href="{{ path('habitat_new') }}" class="btn btn-success">Gérer les habitats</a>
-        </div>
-        <div class="col-md-3">
-            <a href="{{ path('animal_index') }}" class="btn btn-info">Gérer les animaux</a>
-        </div>
-    </div>
-</div>
-{% endblock %}
+	<div class="container">
+		<h1>Dashboard</h1>
+		<p>Bienvenue dans le tableau de bord de l'administration !</p>
+		<div class="row">
+			<div class="col-md-3">
+				<a href="{{ path('user_list') }}" class="btn btn-secondary">Liste des utilisateurs</a>
+			</div>
+            <div class="col-md-3">
+				<a class="nav-link" href="{{ path('admin_create_user') }}">Ajouter un utilisateur</a>
+			</div>
+			<div class="col-md-3">
+				<a href="{{ path('habitat_index') }}" class="btn btn-success">Liste les habitats</a>
+			</div>
+            <div class="col-md-3">
+				<a class="nav-link" href="{{ path('habitat_new') }}">Ajouter un habitat</a>
+			</div>
+			<div class="col-md-3">
+				<a href="{{ path('animal_manage') }}" class="btn btn-info">Liste les animaux</a>
+			</div>			
+			<div class="col-md-3">
+				<a class="nav-link" href="{{ path('admin_animal_new') }}">Ajouter un animal</a>
+			</div>
+		</div>
+	{% endblock %}

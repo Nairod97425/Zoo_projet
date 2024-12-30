@@ -8,19 +8,31 @@
     <div class="container">
         <h1>Modifier l'Habitat</h1>
 
+        {# Affichage des images existantes #}
+        <h3>Images existantes :</h3>
+        <div class="mb-3">
+            {% for image in habitat.images %}
+                <img src="{{ asset('uploads/' ~ image) }}" alt="Image de l'habitat" style="width: 100px; height: auto; margin-right: 10px;">
+            {% else %}
+                <p>Aucune image disponible.</p>
+            {% endfor %}
+        </div>
+
         {{ form_start(form, {'attr': {'enctype': 'multipart/form-data'}}) }}
-            {{ form_row(form.name) }}
-            {{ form_row(form.description) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+
+        {# Champ pour télécharger des nouvelles images #}
+        <div class="mb-3">
             {{ form_row(form.images, {'attr': {'multiple': 'multiple'}}) }}
-            {{ form_row(form.animals) }}
+            <label for="images" class="form-label">Ajouter de nouvelles images (facultatif)</label>
+        </div>
+        
+        {{ form_row(form.animals) }}
 
-            {# Champ pour télécharger une nouvelle image #}
-            <div class="mb-3">
-                <label for="image_field_name" class="form-label">Télécharger une nouvelle image</label>
-                <input type="file" name="image_field_name" id="image_field_name" class="form-control" />
-            </div>
-
-            <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+        {# Correction du bouton avec des espaces #}
+        <button type="submit" class="btn btn-primary">Enregistrer les Modifications</button>
+        
         {{ form_end(form) }}
 
         <a href="{{ path('habitat_index') }}" class="btn btn-secondary mt-3">Retour à la Liste des Habitats</a>

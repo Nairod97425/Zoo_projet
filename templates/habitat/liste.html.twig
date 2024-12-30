@@ -2,44 +2,58 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Habitats{% endblock %}
+{% block title %}Liste des Habitats
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Liste des Habitats</h1>
+	<div class="text-center">
+		<h1>
+			<strong>Les Habitats</strong>
+		</h1>
 
-        <ul class="list-unstyled">
-            {% for habitat in habitats %}
-                <li class="mb-4">
-                    <strong>{{ habitat.name }}</strong>
+		<ul class="list-unstyled">
+			{% for habitat in habitats %}
+				<li class="mb-4 mt-4">
+					<h2>
+						<strong>{{ habitat.name }}</strong>
+					</h2>
+					<div class="ms-5 me-5 d-flex justify-content-center align-items-center">
+						<div class="w-25">
+							{% for image in habitat.images %}
+								<img src="{{ asset('uploads/' ~ image) }}" alt="{{ habitat.name }}" style="width: 300px; height: auto; margin-right: 5px;">
+							{% endfor %}
+						</div>
+						<div class="w-75 ml-3 d-flex flex-column align-items-start">
+							<p class="text-start d-block p-3">{{ habitat.description }}</p>
+							<p class="text-start d-block ps-3">Nombre d'animaux:{{ habitat.getAnimals()|length }}</p>
+						</div>
+					</div>
+					<div class="d-flex flex-row align-items-start justify-content-around w-50 mb-2 mt-2">
+						{# Lien vers la page des détails de l'habitat et des animaux #}
+						<a class="btn btn-info" href="{{ path('list_animal', { 'habitatId': habitat.id }) }}">Voir les animaux</a>
 
-                    <div class="mb-2">
-                        {% for image in habitat.images %}
-                            <img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ habitat.name }}" style="width: 100px; height: auto; margin-right: 5px;">
-                        {% endfor %}
-                    </div>
+						{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+							<a href="{{ path('habitat_edit', {id: habitat.id}) }}" class="btn btn-warning">Modifier</a>
+							<form action="{{ path('habitat_delete', {id: habitat.id}) }}" method="POST" style="display:inline;">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ habitat.id) }}">
+								<button type="submit" class="btn btn-danger">Supprimer</button>
+							</form>
+						{% endif %}
+					</div>
 
-                    <p>{{ habitat.description }}</p>
+				</li>
+			{% else %}
+				<li>Aucun habitat trouvé.</li>
+			{% endfor %}
+		</ul>
 
-                    {# Lien vers la page des détails de l'habitat et des animaux #}
-                    <a href="{{ path('habitat_show', {'id': habitat.id}) }}" class="btn btn-info">Voir les Animaux de Cet Habitat</a>
-
-                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
-                        <a href="{{ path('habitat_edit', {id: habitat.id}) }}" class="btn btn-warning">Modifier</a>
-                        <form action="{{ path('habitat_delete', {id: habitat.id}) }}" method="POST" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ habitat.id) }}">
-                            <button type="submit" class="btn btn-danger">Supprimer</button>
-                        </form>
-                    {% endif %}
-                </li>
-            {% else %}
-                <li>Aucun habitat trouvé.</li>
-            {% endfor %}
-        </ul>
-
-        {# Bouton "Ajouter un habitat" accessible uniquement aux ROLE_ADMIN ou ROLE_EMPLOYE #}
-        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
-            <a href="{{ path('habitat_new') }}" class="btn btn-primary mb-3">Ajouter un Habitat</a>
-        {% endif %}
-    </div>
+		{# Bouton "Ajouter un habitat" accessible uniquement aux ROLE_ADMIN ou ROLE_EMPLOYE #}
+		{% if is_granted('ROLE_ADMIN') or is_granted('ROLE_EMPLOYE') %}
+			<div class="d-flex justify-content-center mb-3">
+				<a href="{{ path('habitat_new') }}" class="btn btn-primary mx-2 flex-fill">Ajouter un Habitat</a>
+				<a class="btn btn-secondary mx-2 flex-fill" href="{{ path('app_employe_dashboard') }}">Tableau de bord Employé</a>
+				<a class="btn btn-secondary mx-2 flex-fill" href="{{ path('app_admin_dashboard') }}">Tableau de bord Admin</a>
+			</div>
+		{% endif %}
+	</div>
 {% endblock %}

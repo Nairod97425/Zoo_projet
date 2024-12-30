@@ -1,14 +1,11 @@
 <?php
-// src/Entity/CompteRendu.php
 
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\CompteRenduRepository")
- */
 #[ORM\Entity(repositoryClass: 'App\Repository\CompteRenduRepository')]
+#[ORM\Table(name: 'compte_rendu')]
 class CompteRendu
 {
     #[ORM\Id]
@@ -19,15 +16,17 @@ class CompteRendu
     #[ORM\Column(type: 'string', length: 255)]
     private string $description;
 
-    #[ORM\ManyToOne(targetEntity: 'App\Entity\Animal')]
+    #[ORM\ManyToOne(targetEntity: Animal::class, inversedBy: 'compteRendus')]
     #[ORM\JoinColumn(name: 'animal_id', referencedColumnName: 'id')]
     private ?Animal $animal;
-
 
     #[ORM\Column(type: 'datetime')]
     private \DateTimeInterface $date;
 
-    // Getters and Setters
+    #[ORM\Column(type: 'string', length: 50)]
+    private string $status; // 'à faire' ou 'fait'
+
+    // Getters et Setters
 
     public function getId(): ?int
     {
@@ -64,6 +63,17 @@ class CompteRendu
     public function setDate(\DateTimeInterface $date): self
     {
         $this->date = $date;
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): self
+    {
+        $this->status = $status;
         return $this;
     }
 }

@@ -1,64 +1,53 @@
 <?php
 // src/Controller/AdminController.php
+
 namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Habitat;
 use App\Form\HabitatType;
 use App\Form\UserType;
-use App\Repository\HabitatRepository;
 use App\Repository\UserRepository;
 use App\Entity\Animal;
 use App\Form\AnimalType;
-// use App\Repository\AnimalRepository;
-// use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-// use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\AnimalRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Service\HabitatService;
+use App\Service\FileUploaderAnimal;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
-
-// use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AdminController extends AbstractController
 {
-
-    // private function handleFileUpload(UploadedFile $file): string
-    // {
-    //     $filename = uniqid() . '.' . $file->guessExtension();
-    //     $file->move($this->getParameter('kernel.project_dir') . '/public/uploads/images', $filename);
-    //     return $filename;
-    // }
-
     private EntityManagerInterface $entityManager;
+    private HabitatService $habitatService;
+    private UserPasswordHasherInterface $passwordHasher;
+    private FileUploaderAnimal $fileUploader;
 
-    // Injection de l'EntityManager dans le constructeur
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $entityManager, HabitatService $habitatService, UserPasswordHasherInterface $passwordHasher, FileUploaderAnimal $fileUploader)
     {
         $this->entityManager = $entityManager;
+        $this->habitatService = $habitatService;
+        $this->passwordHasher = $passwordHasher;
+        $this->fileUploader = $fileUploader;
     }
 
-    #[Route(path: '/dashboard', name: 'app_admin_dashboard')]
-    public function dashboard(): Response
-    {
-        // Logique pour le tableau de bord de l'administrateur
-        return $this->render('admin/dashboard.html.twig');
-    }
-
-    //Gestion des nouveaux utiliisateur
-    #[Route(path: '/create_user', name: 'admin_create_user')]
+    #[Route('/admin/user/create_user', name: 'admin_create_user', methods: ['GET', 'POST'])]
     public function createUser(Request $request): Response
     {
-        // Créer un nouvel objet User
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Persister le nouvel utilisateur
+            $hashedPassword = $this->passwordHasher->hashPassword($user, $user->getPassword());
+            $user->setPassword($hashedPassword);
+
             $this->entityManager->persist($user);
             $this->entityManager->flush();
             $this->addFlash('success', 'Utilisateur créé avec succès.');
@@ -71,37 +60,27 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/users', name: 'admin_list_users')]
-    public function listUsers(): Response
-    {
-        // Récupérer la liste des utilisateurs depuis la base de données
-        $users = $this->entityManager->getRepository(User::class)->findAll();
-
-        return $this->render('admin/user/list_users.html.twig', [
-            'users' => $users,
-        ]);
-    }
-
-    #[Route(path: '/admin/user/edit/{id}', name: 'admin_edit_user')]
+    #[Route('/admin/user/edit_user/{id}', name: 'admin_edit_user', methods: ['GET', 'POST'])]
     public function editUser(int $id, UserRepository $userRepository, Request $request): Response
     {
-        // Récupérer l'utilisateur par ID via le repository
         $user = $userRepository->find($id);
 
-         // Si l'utilisateur n'existe pas, redirigez ou gérez l'erreur
-         if (!$user) {
+        if (!$user) {
             throw $this->createNotFoundException('Utilisateur non trouvé');
         }
 
-        // Créer le formulaire pour éditer l'utilisateur
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Mettre à jour l'utilisateur
+            $newPassword = $form->get('password')->getData();
+            if ($newPassword) {
+                $hashedPassword = $this->passwordHasher->hashPassword($user, $newPassword);
+                $user->setPassword($hashedPassword);
+            }
+
             $this->entityManager->flush();
             $this->addFlash('success', 'Utilisateur mis à jour avec succès.');
-
             return $this->redirectToRoute('admin_list_users');
         }
 
@@ -111,48 +90,54 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/user/delete/{id}', name: 'admin_delete_user')]
-    public function deleteUser(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    #[Route('/admin/user/delete/{id}', name: 'admin_delete_user', methods: ['POST'])]
+    public function deleteUser(int $id, UserRepository $userRepository): Response
     {
-
-        // Récupérer l'utilisateur par son ID
         $user = $userRepository->find($id);
-        
-       // Vérifier si l'utilisateur existe
-       if (!$user) {
-        throw $this->createNotFoundException('Utilisateur non trouvé');
+
+        if (!$user) {
+            throw $this->createNotFoundException('Utilisateur non trouvé');
+        }
+
+        $this->entityManager->remove($user);
+        $this->entityManager->flush();
+        $this->addFlash('success', 'Utilisateur supprimé avec succès');
+        return $this->redirectToRoute('admin_list_users');
     }
 
-    // Supprimer l'utilisateur de la base de données
-    $entityManager->remove($user);
-    $entityManager->flush();
-
-    // Rediriger après la suppression
-    $this->addFlash('success', 'Utilisateur supprimé avec succès');
-    return $this->redirectToRoute('admin_list_user');  // Remplacez par la route vers la liste des utilisateurs
-}
-
-    //Gestion des Habitats
-
-    #[Route(path: '/admin/habitats', name: 'admin_habitats')]
-    public function index(HabitatRepository $habitatRepository): Response
+    #[Route('/admin/user/list_users', name: 'admin_list_users')]
+    public function listUsers(): Response
     {
-        $habitats = $habitatRepository->findAll();
+        $users = $this->entityManager->getRepository(User::class)->findAll();
+        return $this->render('admin/user/list_users.html.twig', [
+            'users' => $users,
+        ]);
+    }
 
-        return $this->render('admin/habitat/manage_habitats.html.twig', [
+    #[Route('/admin/dashboard', name: 'app_admin_dashboard')]
+    public function dashboard(): Response
+    {
+        return $this->render('admin/dashboard.html.twig');
+    }
+
+    #[Route('/admin/habitats', name: 'admin_habitats', methods: ['GET'])]
+    public function manageHabitats(): Response
+    {
+        $habitats = $this->habitatService->getAllHabitats();
+
+        return $this->render('habitat/liste.html.twig', [
             'habitats' => $habitats,
         ]);
     }
 
-    #[Route(path: '/admin/habitat/create', name: 'admin_create_habitat')]
-    public function create_habitat(Request $request): Response
+    #[Route('/admin/habitat/create', name: 'admin_create_habitat', methods: ['GET', 'POST'])]
+    public function createHabitat(Request $request): Response
     {
-        $habitat = new Habitat();
+        $habitat = new Habitat("Nom de l'Habitat");
         $form = $this->createForm(HabitatType::class, $habitat);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Récupérer le ou les fichiers téléchargés
             $files = $form->get('images')->getData();
 
             if ($files) {
@@ -166,60 +151,41 @@ class AdminController extends AbstractController
                 $habitat->setImages($filenames);
             }
 
-            // Persister l'entité Habitat
             $this->entityManager->persist($habitat);
             $this->entityManager->flush();
-
             $this->addFlash('success', 'L\'habitat a été créé avec succès.');
-            return $this->redirectToRoute('admin_habitats');
+            return $this->redirectToRoute('habitat_index');
         }
 
-        return $this->render('admin/habitat/manage_habitats.html.twig', [
+        return $this->render('habitat/create.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    // Méthode pour gérer l'upload du fichier
     private function handleFileUpload(UploadedFile $file): string
     {
-        $uploadsDirectory = $this->getParameter('uploads_directory'); // Vous pouvez définir ce paramètre dans config/services.yaml
-
-        // Générer un nom unique pour le fichier
+        $uploadsDirectory = $this->getParameter('uploads_directory');
         $filename = uniqid() . '.' . $file->guessExtension();
 
         try {
-            // Déplacer le fichier téléchargé dans le répertoire de destination
-            $file->move(
-                $uploadsDirectory,  // Dossier où enregistrer l'image
-                $filename
-            );
+            $file->move($uploadsDirectory, $filename);
         } catch (IOExceptionInterface $exception) {
-            // Gérer l'exception si un problème survient lors de l'upload
             $this->addFlash('error', 'Erreur lors de l\'upload de l\'image.');
-            throw $exception; // Vous pouvez aussi choisir de gérer l'exception autrement
+            throw $exception;
         }
 
         return $filename;
     }
 
-
-
-    #[Route(path: '/admin/habitat/edit/{id}', name: 'admin_edit_habitat')]
-    public function edit_habitat(Habitat $habitat, Request $request): Response
+    #[Route('/admin/habitat/edit/{id}', name: 'admin_edit_habitat', methods: ['GET', 'POST'])]
+    public function editHabitat(Habitat $habitat, Request $request): Response
     {
-        $form = $this->createForm(HabitatType::class, $habitat);
-        // $habitat = $habitatRepository->find($id);
-        if (!$habitat) {
-            throw $this->createNotFoundException('Habitat non trouvé.');
-        }
-
-        // Logique pour modifier l'habitat
         $form = $this->createForm(HabitatType::class, $habitat);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->entityManager->flush();
-
+            $this->addFlash('success', 'Habitat modifié avec succès.');
             return $this->redirectToRoute('habitat_index');
         }
 
@@ -229,72 +195,99 @@ class AdminController extends AbstractController
         ]);
     }
 
-    #[Route(path: '/admin/habitat/delete/{id}', name: 'admin_delete_habitat', methods: ['POST'])]
-    public function delete_habitat(int $id, HabitatRepository $habitatRepository): Response
+    #[Route('/admin/animal/manage_animals', name: 'animal_manage', methods: ['GET'])]
+    public function manageAnimals(AnimalRepository $animalRepository): Response
     {
-        $habitat = $habitatRepository->find($id);
-        if ($habitat) {
-            $entityManager = $this->entityManager;
-            $entityManager->remove($habitat);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('admin_habitats');
+        $animals = $animalRepository->findAll();
+        return $this->render('admin/animal/manage_animals.html.twig', [
+            'animals' => $animals,
+        ]);
     }
 
-    //Gestion des Animaux
-
-    #[Route('/admin/animal/create', name: 'admin_create_animal', methods: ['GET', 'POST'])]
-    public function create(Request $request): Response
+    #[Route('/admin/animal/create', name: 'admin_animal_new', methods: ['GET', 'POST'])]
+    public function createAnimal(Request $request): Response
     {
-        // Logique pour ajouter un nouvel animal
         $animal = new Animal();
         $form = $this->createForm(AnimalType::class, $animal);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $files = $form->get('image')->getData();
+
+            if ($files) {
+                $filenames = [];
+                foreach ($files as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $filename = $this->fileUploader->upload($file);
+                        $filenames[] = $filename;
+                    }
+                }
+                $animal->setImage($filenames);
+            }
+
             $this->entityManager->persist($animal);
             $this->entityManager->flush();
+            $this->addFlash('success', 'L\'animal a été ajouté avec succès.');
 
-            $this->addFlash('success', 'Animal créé avec succès.');
-            return $this->redirectToRoute('admin_manage_animals');
+            return $this->redirectToRoute('animal_manage');
         }
 
-        return $this->render('admin_animal/create.html.twig', [
+        return $this->render('admin/animal/create_animal.html.twig', [
             'form' => $form->createView(),
         ]);
     }
 
-    #[Route('/admin/animal/edit/{id}', name: 'admin_edit_animal', methods: ['GET', 'POST'])]
-    public function edit(Animal $animal, Request $request): Response
+    #[Route('/admin/animal/edit/{id}', name: 'admin_animal_edit', methods: ['GET', 'POST'])]
+    public function editAnimal(Animal $animal, Request $request): Response
     {
         $form = $this->createForm(AnimalType::class, $animal);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->entityManager->flush();
-            $this->addFlash('success', 'Animal modifié avec succès.');
+            $files = $form->get('image')->getData();
 
-            return $this->redirectToRoute('animal_index');
+            if ($files) {
+                $filenames = [];
+                foreach ($files as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $filename = $this->fileUploader->upload($file);
+                        $filenames[] = $filename;
+                    }
+                }
+
+                // Supprimer les anciennes images si nécessaire
+                $existingImages = $animal->getImage();
+                foreach ($existingImages as $oldImage) {
+                    $oldImagePath = $this->getParameter('uploads_directory') . '/' . $oldImage;
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+
+                $animal->setImage($filenames);
+            }
+
+            $this->entityManager->flush();
+            $this->addFlash('success', 'L\'animal a été modifié avec succès.');
+
+            return $this->redirectToRoute('animal_manage');
         }
 
-        return $this->render('admin_animal/edit.html.twig', [
+        return $this->render('admin/animal/edit_animal.html.twig', [
             'form' => $form->createView(),
             'animal' => $animal,
         ]);
     }
 
-
-    #[Route('/admin/animal/delete/{id}', name: 'admin_delete_animal', methods: ['POST'])]
-    public function delete(Animal $animal, Request $request): Response
+    #[Route('/admin/animal/delete/{id}', name: 'admin_animal_delete', methods: ['POST'])]
+    public function deleteAnimal(Animal $animal, Request $request): Response
     {
         if ($this->isCsrfTokenValid('delete' . $animal->getId(), $request->request->get('_token'))) {
             $this->entityManager->remove($animal);
             $this->entityManager->flush();
-
-            $this->addFlash('success', 'Animal supprimé avec succès.');
+            $this->addFlash('success', 'L\'animal a été supprimé avec succès.');
         }
 
-        return $this->redirectToRoute('animal_index');
+        return $this->redirectToRoute('animal_manage');
     }
 }

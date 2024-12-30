@@ -1,0 +1,16 @@
+{# templates/compte_rendu/new.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Créer un Compte Rendu
+{% endblock %}
+
+{% block body %}
+	<h1>Créer un Compte Rendu</h1>
+	{{ form_start(form) }}
+	{{ form_widget(form) }}
+	<a href="{{ path('compte_rendu_new') }}">Créer un Compte Rendu</a>
+	<a href="{{ path('compte_rendu_index') }}">Liste des Comptes Rendus</a>
+	<a href="{{ path('compte_rendu_edit', {id: compteRendu.id}) }}">Modifier</a>
+	{{ form_end(form) }}
+	<a href="{{ path('compte_rendu_index') }}" class="btn btn-secondary">Retour à la liste</a>
+{% endblock %}

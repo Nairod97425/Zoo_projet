@@ -1,41 +1,57 @@
 {# templates/admin/manage_animals.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Gérer les Animaux{% endblock %}
+{% block title %}Gérer les Animaux
+{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Gérer les Animaux</h1>
-        <a href="{{ path('admin_create_animal') }}" class="btn btn-primary mb-3">Créer un nouvel animal</a>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Espèce</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for animal in animaux %}
-                    <tr>
-                        <td>{{ animal.id }}</td>
-                        <td>{{ animal.nom }}</td>
-                        <td>{{ animal.espece }}</td>
-                        <td>
-                            <a href="{{ path('admin_edit_animal', { id: animal.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
-                            <form action="{{ path('admin_delete_animal', { id: animal.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr ?');" style="display:inline;">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ animal.id) }}">
-                                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% else %}
-                    <tr>
-                        <td colspan="4">Aucun animal trouvé</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% endblock %}
+	<div class="container">
+		<h1>Gérer les Animaux</h1>
+		<a href="{{ path('admin_animal_new') }}" class="btn btn-primary mb-3">Créer un nouvel animal</a>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Image</th>
+					<th>Nom</th>
+					<th>Espèce</th>
+					<th>Arriver</th>
+					<th>Santé</th>
+					<th>Nourriture</th>
+					<th>Habitat</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for animal in animals %}
+					<tr>
+						<td>
+							{% if animal.image is not empty %}
+								{% for image in animal.image %}
+									<img src="{{ asset('uploads/images/' ~ image) }}" alt="{{ animal.name }}" style="width: 100px; height: auto; margin-right: 5px;">
+								{% endfor %}
+							{% else %}
+								<p>Aucune image disponible.</p>
+							{% endif %}
+						</td>
+						<td>{{ animal.name }}</td>
+						<td>{{ animal.species }}</td>
+						<td>{{ animal.birthDate ? animal.birthDate|date('d/m/Y') : 'Date inconnue' }}</td>
+						<td>{{ animal.healthStatus }}</td>
+						<td>{{ animal.feedingSchedule }}</td>
+						<td>{{ animal.habitat ? animal.habitat.name : 'Aucun habitat' }}</td>
+						<td>
+							<a href="{{ path('admin_animal_edit', { id: animal.id }) }}" class="btn btn-warning btn-sm">Modifier</a>
+							<form action="{{ path('admin_animal_delete', { id: animal.id }) }}" method="post" onsubmit="return confirm('Êtes-vous sûr ?');" style="display:inline;">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ animal.id) }}">
+								<button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+							</form>
+						</td>
+					</tr>
+				</tbody>
+			</tbody>
+		</tr>
+	{% else %}
+		<tr>
+			<td colspan="4">Aucun animal trouvé</td>
+		</tr>
+	{% endfor %}
+</tbody></table></div>{% endblock %}
